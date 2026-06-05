@@ -579,9 +579,38 @@ function D(){
         if(o&&o.users&&o.users.length>1){const nd={...o,saas:o.saas||[],saasReqs:o.saasReqs||[],period:o.period||{}};S(nd);return nd;}
       }
     }
-  }catch(e){}
-  const d={users:[{id:'u1',name:'People팀',email:'people@dentlink.app',dept:'People팀',pw:'admin1234',role:'admin'}],requests:[],saas:[],saasReqs:[],period:{half:'2026년 1반기',quarter:'2026년 2분기',qdate:''}};
-  S(d);return d;
+} catch(e) {}
+
+const d = {
+  users: [
+    { id: 'u1', name: 'People팀', email: 'people@dentlink.app', dept: 'People팀', pw: 'admin1234', role: 'admin' }
+  ],
+  requests: [],
+  saas: [],
+  saasReqs: [],
+  period: { half: '2026년 1반기', quarter: '2026년 2분기', qdate: '' }
+};
+
+d.users.push({
+  id: 'u2',
+  name: '김진아',
+  email: 'jinakim@dentlink.app',
+  dept: '구성원',
+  pw: '1234',
+  role: 'user'
+});
+
+d.users.push({
+  id: 'u3',
+  name: '김도예',
+  email: 'doyekim@dentlink.app',
+  dept: '구성원',
+  pw: '0000',
+  role: 'user'
+});
+
+S(d);
+return d;
 }
 function S(d){localStorage.setItem(SK,JSON.stringify(d));}
 function gid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
