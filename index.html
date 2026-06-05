@@ -99,8 +99,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Ne
 .cath{background:#E1F5EE;color:#0F6E56;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500}
 .catg{background:#EEEDFE;color:#534AB7;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500}
 .cate{background:#FAEEDA;color:#854F0B;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500}
-.user-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
-.user-row:last-child{border-bottom:none}
+.user-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd);justify-content:space-between}
+.user-info-box{display:flex;align-items:center;gap:12px}
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--pb);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--p);flex-shrink:0}
 .hint{font-size:11px;color:var(--tx3)}
 .empty{text-align:center;padding:28px;font-size:13px;color:var(--tx3)}
@@ -120,19 +120,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Ne
     <div class="sb-email" id="sbEmail">복지 시스템</div>
   </div>
   <nav class="sb-nav">
-    <button class="ni" id="sn-apply" onclick="go('apply')" style="display:none"><i class="ti ti-gift"></i>복지 신청</button>
-    <button class="ni" id="sn-mine" onclick="go('mine')" style="display:none"><i class="ti ti-list-check"></i>내 현황</button>
-    <button class="ni" id="sn-saas" onclick="go('saas')" style="display:none"><i class="ti ti-brand-appstore"></i>SaaS 신청</button>
-    <button class="ni" id="sn-myinfo" onclick="go('myinfo')" style="display:none"><i class="ti ti-user-circle"></i>내 정보</button>
-    <button class="ni" id="sn-dash" onclick="aTab('dash')" style="display:none"><i class="ti ti-layout-dashboard"></i>대시보드</button>
-    <button class="ni" id="sn-reqs" onclick="aTab('reqs')" style="display:none"><i class="ti ti-inbox"></i>신청 현황</button>
-    <button class="ni" id="sn-budgets" onclick="aTab('budgets')" style="display:none"><i class="ti ti-chart-bar"></i>예산 현황</button>
-    <button class="ni" id="sn-saas-adm" onclick="aTab('saas-adm')" style="display:none"><i class="ti ti-brand-appstore"></i>SaaS 관리</button>
-    <button class="ni" id="sn-users" onclick="aTab('users')" style="display:none"><i class="ti ti-users"></i>구성원 관리</button>
-    <button class="ni" id="sn-cfg" onclick="aTab('cfg')" style="display:none"><i class="ti ti-settings"></i>설정</button>
+    <button class="ni" id="sn-apply" onclick="go('apply')"><i class="ti ti-gift"></i>복지 신청</button>
+    <button class="ni" id="sn-mine" onclick="go('mine')"><i class="ti ti-list-check"></i>내 현황</button>
+    <button class="ni" id="sn-saas" onclick="go('saas')"><i class="ti ti-brand-appstore"></i>SaaS 신청</button>
+    <button class="ni" id="sn-myinfo" onclick="go('myinfo')"><i class="ti ti-user-circle"></i>내 정보</button>
+    <button class="ni" id="sn-users" onclick="go('users')"><i class="ti ti-users"></i>구성원 관리</button>
   </nav>
   <div class="sb-bot">
-    <button class="ni" id="sn-out" onclick="doOut()" style="display:none;padding:0;color:var(--tx3)"><i class="ti ti-logout"></i>로그아웃</button>
+    <button class="ni" id="sn-out" onclick="doOut()" style="padding:0;color:var(--tx3)"><i class="ti ti-logout"></i>로그아웃</button>
   </div>
 </div>
 <div class="main">
@@ -142,12 +137,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Ne
   </div>
   <div class="content">
 
-    <!-- 로그인 -->
     <div id="sc-login" class="screen on">
       <div class="login-wrap"><div class="login-box">
         <div class="login-icon"><i class="ti ti-user" style="font-size:24px"></i></div>
         <div class="login-title">이노바이드 복지 시스템</div>
-        <div id="lmsg"></div>
+        <div id="lmsg" style="color:red;font-size:12px;margin-bottom:10px"></div>
         <div class="lf"><label class="ll">이메일</label><input class="li" id="le" type="email" placeholder="회사 이메일 입력"></div>
         <div class="lf"><label class="ll">비밀번호</label><input class="li" id="lp" type="password" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doLogin()"></div>
         <button class="btn-login" onclick="doLogin()">로그인</button>
@@ -155,1553 +149,201 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Ne
       </div></div>
     </div>
 
-    <!-- 구성원: 복지 신청 -->
-    <div id="sc-apply" class="screen">
-      <div class="bbar" id="bb-apply"></div>
+    <div id="sc-users" class="screen">
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-          <span class="card-title" style="margin-bottom:0">복지 혜택 신청</span>
-          <span class="hint">항목 추가로 한 번에 신청 가능해요</span>
-        </div>
-        <div id="amsg"></div>
-        <div class="fr" style="max-width:200px;margin-bottom:14px">
-          <label class="fl">카테고리</label>
-          <select class="fs" id="acat" onchange="updT()">
-            <option value="">선택</option><option value="건강">건강</option><option value="성장">성장</option><option value="효율">효율</option>
-          </select>
-        </div>
-        <div id="iwrap"></div>
-        <button class="add-btn" onclick="addItem()"><i class="ti ti-plus"></i> 항목 추가</button>
-        <div class="tbar" id="tbar" style="display:none"></div>
-        <div id="swrap" style="display:none"></div>
-        <div class="fr"><label class="fl">비고 (선택)</label><textarea class="fta" id="anote" placeholder="기타 참고사항"></textarea></div>
-        <div style="text-align:right"><button class="btn-p" onclick="submitReq()"><i class="ti ti-send"></i> 신청하기</button></div>
-      </div>
-    </div>
-
-    <!-- 구성원: 내 현황 -->
-    <div id="sc-mine" class="screen">
-      <div class="bbar" id="bb-mine"></div>
-      <div class="card" style="padding:0">
-        <div class="card-title" style="padding:16px 20px 0">신청 내역</div>
-        <table class="tbl">
-          <thead><tr><th style="width:28px"></th><th>신청 제목</th><th>카테고리</th><th>항목 수</th><th>신청일</th><th style="text-align:right">합계</th><th>상태</th></tr></thead>
-          <tbody id="minetb"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 구성원: SaaS 신청 -->
-    <div id="sc-saas" class="screen">
-      <div class="card">
-        <div class="card-title">SaaS 도입 신청</div>
-        <div id="smsg"></div>
+        <div class="card-title">구성원 등록</div>
+        <div id="umsg" style="color:green;font-size:12px;margin-bottom:10px"></div>
         <div class="g2" style="margin-bottom:10px">
-          <div class="fr"><label class="fl">SaaS명</label><input class="fi" id="sn" placeholder="예) Notion, Linear"></div>
-          <div class="fr"><label class="fl">플랜명 <span class="hint">(선택)</span></label><input class="fi" id="sp" placeholder="예) Pro, Team"></div>
+          <div class="fr"><label class="fl">이름</label><input class="fi" id="un" placeholder="홍길동"></div>
+          <div class="fr"><label class="fl">이메일</label><input class="fi" id="ue" type="email" placeholder="example@dentlink.app"></div>
         </div>
         <div class="g2" style="margin-bottom:10px">
-          <div class="fr">
-            <label class="fl">사용 구분</label>
-            <select class="fs" id="stype" onchange="updSaasType()">
-              <option value="personal">개인 사용</option>
-              <option value="team">팀 사용</option>
-            </select>
-          </div>
-          <div class="fr" id="steam-wrap" style="display:none">
-            <label class="fl">사용 팀 <span class="hint">(팀 전체에 구독 현황 표시)</span></label>
-            <select class="fs" id="steam"><option value="">팀 선택</option></select>
-          </div>
+          <div class="fr"><label class="fl">부서</label><input class="fi" id="ud" placeholder="개발팀"></div>
+          <div class="fr"><label class="fl">임시 비밀번호</label><input class="fi" id="upw" placeholder="비밀번호 입력"></div>
         </div>
-        <div class="g3" style="margin-bottom:10px">
-          <div class="fr"><label class="fl">통화</label>
-            <select class="fs" id="scur" onchange="updMSaasLabel()">
-              <option value="KRW">KRW (원)</option>
-              <option value="USD">USD ($)</option>
-            </select>
-          </div>
-          <div class="fr"><label class="fl">월 비용</label><input class="fi" id="sc" type="number" placeholder="0"></div>
-          <div class="fr"><label class="fl">사이트 URL</label><input class="fi" id="su" placeholder="https://..."></div>
-        </div>
-        <div class="fr" style="margin-bottom:14px"><label class="fl">도입 목적</label><textarea class="fta" id="sr" placeholder="어떤 목적으로 사용할지 적어주세요"></textarea></div>
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span class="hint"><i class="ti ti-info-circle"></i> 월 구독 기준으로만 신청 가능합니다</span>
-          <button class="btn-p" onclick="submitSaas()"><i class="ti ti-send"></i> 신청하기</button>
-        </div>
+        <p class="hint" style="margin-bottom:10px">등록 후 이메일과 비밀번호를 구성원에게 전달해주세요.</p>
+        <button class="btn-p" onclick="addUserFromUI()"><i class="ti ti-plus"></i> 등록</button>
       </div>
-      <div class="card" style="padding:0">
-        <div class="card-title" style="padding:14px 16px 8px">내 신청 현황</div>
-        <div id="my-saas" style="padding:0 16px 12px"></div>
-      </div>
-      <div class="card" style="padding:0">
-        <div class="card-title" style="padding:14px 16px 8px">전체 구독 현황</div>
-        <table class="tbl"><thead><tr><th>서비스</th><th>플랜</th><th>담당자</th><th style="text-align:right">월 비용</th><th>상태</th></tr></thead>
-        <tbody id="saas-mtb"></tbody></table>
+      <div class="card" style="padding:20px">
+        <div class="card-title">구성원 목록</div>
+        <div id="ulist"></div>
       </div>
     </div>
 
-    <!-- 구성원: 내 정보 -->
-    <div id="sc-myinfo" class="screen">
-      <div class="card" style="max-width:480px">
-        <div class="card-title">내 정보 변경</div>
-        <div id="myinfo-msg"></div>
-        <div class="fr">
-          <label class="fl">이름</label>
-          <input class="fi" id="mi-name" placeholder="이름" readonly style="background:var(--bg2);color:var(--tx2)">
-        </div>
-        <div class="fr">
-          <label class="fl">이메일</label>
-          <input class="fi" id="mi-email" placeholder="이메일" readonly style="background:var(--bg2);color:var(--tx2)">
-        </div>
-        <div class="fr">
-          <label class="fl">부서</label>
-          <input class="fi" id="mi-dept" placeholder="부서">
-        </div>
-        <hr style="border:none;border-top:1px solid var(--bd);margin:14px 0">
-        <div class="card-title" style="margin-bottom:10px">비밀번호 변경</div>
-        <div class="fr">
-          <label class="fl">현재 비밀번호</label>
-          <input class="fi" id="mi-cur" type="password" placeholder="현재 비밀번호">
-        </div>
-        <div class="fr">
-          <label class="fl">새 비밀번호</label>
-          <input class="fi" id="mi-new" type="password" placeholder="새 비밀번호">
-        </div>
-        <div class="fr">
-          <label class="fl">새 비밀번호 확인</label>
-          <input class="fi" id="mi-con" type="password" placeholder="새 비밀번호 확인">
-        </div>
-        <button class="btn-p" onclick="saveMyInfo()">저장</button>
-      </div>
-    </div>
+    <div id="sc-apply" class="screen"><div class="card"><div class="card-title">복지 신청 페이지 준비됨</div></div></div>
+    <div id="sc-mine" class="screen"><div class="card"><div class="card-title">내 현황 페이지 준비됨</div></div></div>
+    <div id="sc-saas" class="screen"><div class="card"><div class="card-title">SaaS 신청 페이지 준비됨</div></div></div>
+    <div id="sc-myinfo" class="screen"><div class="card"><div class="card-title">내 정보 변경 준비됨</div></div></div>
 
-    <!-- 관리자 -->
-    <div id="sc-adm" class="screen">
-
-      <!-- 대시보드 -->
-      <div id="at-dash" style="display:none">
-        <div class="metrics" id="dash-met"></div>
-        <div class="g2" style="margin-bottom:14px">
-          <div class="card" style="margin-bottom:0">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <span style="font-weight:600">복지 신청 대기</span>
-              <a onclick="aTab('reqs')" style="font-size:12px;color:var(--p);cursor:pointer">전체 보기 →</a>
-            </div>
-            <div id="dash-pend"></div>
-          </div>
-          <div class="card" style="margin-bottom:0">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <span style="font-weight:600">구성원별 잔여 예산</span>
-              <a onclick="aTab('budgets')" style="font-size:12px;color:var(--p);cursor:pointer">전체 보기 →</a>
-            </div>
-            <div id="dash-bud"></div>
-          </div>
-        </div>
-        <div class="card" style="margin-bottom:0">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <span style="font-weight:600">SaaS 도입 신청 대기</span>
-            <a onclick="aTab('saas-adm')" style="font-size:12px;color:var(--p);cursor:pointer">전체 보기 →</a>
-          </div>
-          <div id="dash-saas-pend"></div>
-        </div>
-      </div>
-
-      <!-- 신청 현황 -->
-      <div id="at-reqs" style="display:none">
-        <div id="period-tabs-reqs" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"></div>
-        <div class="frow">
-          <select id="fst" onchange="renderReqs()"><option value="">전체 상태</option><option value="대기">대기</option><option value="승인">승인</option><option value="반려">반려</option></select>
-          <select id="fcat" onchange="renderReqs()"><option value="">전체 카테고리</option><option value="건강">건강</option><option value="성장">성장</option><option value="효율">효율</option></select>
-          <select id="fteam" onchange="renderReqs()"><option value="">전체 팀</option></select>
-          <select id="finact" onchange="renderReqs()"><option value="">전체 구성원</option><option value="active">재직 중</option><option value="inactive">퇴사자</option></select>
-          <input id="fq" placeholder="이름 검색" oninput="renderReqs()">
-          <button class="btn-p" style="height:32px" onclick="renderReqs()"><i class="ti ti-search"></i> Search</button>
-          <button class="btn" style="height:32px" onclick="resetF()"><i class="ti ti-refresh"></i> Reset</button>
-        </div>
-        <div class="frow" style="margin-bottom:14px;align-items:center">
-          <span style="font-size:12px;color:var(--tx2);white-space:nowrap">날짜 범위</span>
-          <input id="fds" type="date" placeholder="시작일" onchange="renderReqs()" style="height:32px;font-size:13px;padding:0 10px;border:1px solid var(--bd2);border-radius:var(--r);background:var(--bg);color:var(--tx)">
-          <span style="font-size:12px;color:var(--tx3)">~</span>
-          <input id="fde" type="date" placeholder="종료일" onchange="renderReqs()" style="height:32px;font-size:13px;padding:0 10px;border:1px solid var(--bd2);border-radius:var(--r);background:var(--bg);color:var(--tx)">
-          <button class="btn" style="height:32px;font-size:12px" onclick="setDateRange('quarter')">이번 분기</button>
-          <button class="btn" style="height:32px;font-size:12px" onclick="setDateRange('half')">이번 반기</button>
-          <button class="btn" style="height:32px;font-size:12px" onclick="setDateRange('year')">올해</button>
-        </div>
-        <div class="card" style="padding:0">
-          <table class="tbl"><thead><tr><th style="width:28px"></th><th>신청 제목</th><th>신청자</th><th>카테고리</th><th>항목</th><th>신청일</th><th style="text-align:right">합계</th><th>현황</th><th>처리</th></tr></thead>
-          <tbody id="reqs-tb"></tbody></table>
-        </div>
-      </div>
-
-      <!-- 예산 현황 -->
-      <div id="at-budgets" style="display:none">
-        <div id="period-tabs-bud" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"></div>
-        <div class="frow" style="margin-bottom:12px">
-          <select id="bteam" onchange="renderBudgets()"><option value="">전체 팀</option></select>
-          <select id="binact" onchange="renderBudgets()"><option value="">전체 구성원</option><option value="active">재직 중</option><option value="inactive">퇴사자</option></select>
-        </div>
-        <div class="card" style="padding:0">
-          <table class="tbl"><thead><tr><th style="width:28px"></th><th>이름</th><th>부서</th><th>사용액</th><th style="width:180px">사용률</th><th style="text-align:right">분기 잔여</th><th style="text-align:right">반기 잔여</th></tr></thead>
-          <tbody id="bud-tb"></tbody></table>
-        </div>
-      </div>
-
-      <!-- SaaS 관리 -->
-      <div id="at-saas-adm" style="display:none">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-          <div></div>
-          <button class="btn-p" onclick="openSF()"><i class="ti ti-plus"></i> 구독 추가</button>
-        </div>
-        <div id="sf-wrap" style="display:none" class="card">
-          <div class="card-title" id="sf-ttl">SaaS 구독 추가</div>
-          <div class="g2" style="margin-bottom:10px">
-            <div class="fr"><label class="fl">서비스명</label><input class="fi" id="sf-nm"></div>
-            <div class="fr"><label class="fl">카테고리</label><select class="fs" id="sf-ct"><option value="협업">협업</option><option value="디자인">디자인</option><option value="개발">개발</option><option value="마케팅">마케팅</option><option value="기타">기타</option></select></div>
-          </div>
-          <div class="g3" style="margin-bottom:10px">
-            <div class="fr"><label class="fl">통화</label><select class="fs" id="sf-cur" onchange="updSFcost()"><option value="KRW">KRW (원)</option><option value="USD">USD ($)</option></select></div>
-            <div class="fr"><label class="fl">월 비용</label><input class="fi" id="sf-cs" type="number" placeholder="0" oninput="updSFcost()"></div>
-            <div class="fr"><label class="fl" id="sf-cs-label">원화 금액</label><input class="fi" id="sf-cs-krw" type="number" placeholder="자동계산" readonly style="background:var(--bg2)"></div>
-          </div>
-          <div class="g2" style="margin-bottom:10px">
-            <div class="fr"><label class="fl">구독 시작일</label><input class="fi" id="sf-st" type="date" onchange="calcNextRenew()"></div>
-            <div class="fr"><label class="fl">구독 주기</label>
-              <select class="fs" id="sf-cycle" onchange="calcNextRenew()">
-                <option value="monthly">월 단위</option>
-                <option value="yearly">연 단위</option>
-              </select>
-            </div>
-          </div>
-          <div class="fr" style="margin-bottom:10px">
-            <label class="fl">다음 갱신일 <span class="hint">(자동 계산)</span></label>
-            <input class="fi" id="sf-rn" readonly style="background:var(--bg2);color:var(--tx2)" placeholder="시작일 선택 시 자동 계산">
-          </div>
-          <div class="g2" style="margin-bottom:10px">
-            <div class="fr"><label class="fl">담당자</label><input class="fi" id="sf-ow"></div>
-            <div class="fr"><label class="fl">플랜/좌석</label><input class="fi" id="sf-pl"></div>
-          </div>
-          <div class="g2" style="margin-bottom:10px">
-            <div class="fr">
-              <label class="fl">사용 구분</label>
-              <select class="fs" id="sf-type" onchange="updSFtype()">
-                <option value="personal">개인 사용</option>
-                <option value="team">팀 사용</option>
-              </select>
-            </div>
-            <div class="fr" id="sf-team-wrap" style="display:none">
-              <label class="fl">사용 팀</label>
-              <select class="fs" id="sf-team"><option value="">팀 선택</option></select>
-            </div>
-          </div>
-          <div class="fr"><label class="fl">비고</label><input class="fi" id="sf-nt"></div>
-          <input type="hidden" id="sf-id">
-          <div style="display:flex;gap:8px;margin-top:4px">
-            <button class="btn-p" onclick="saveSaasAdm()">저장</button>
-            <button class="btn" onclick="closeSF()">취소</button>
-          </div>
-        </div>
-        <div class="card" style="padding:0;margin-bottom:14px">
-          <div class="card-title" style="padding:14px 16px 8px">도입 신청 목록</div>
-          <div id="saas-reqs" style="padding:0 16px 12px"></div>
-        </div>
-        <div class="card" style="padding:0">
-          <table class="tbl"><thead><tr><th>서비스</th><th>카테고리</th><th>구분</th><th>플랜</th><th>담당자</th><th>시작일</th><th>주기</th><th>다음 갱신일</th><th style="text-align:right">월 비용</th><th>상태</th><th></th></tr></thead>
-          <tbody id="saas-atb"></tbody></table>
-          <div style="padding:10px 16px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--tx2)">월 합계</span><span style="font-weight:700" id="saas-tot">0원</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 구성원 관리 -->
-      <div id="at-users" style="display:none">
-        <div class="card">
-          <div class="card-title">구성원 등록</div>
-          <div id="umsg"></div>
-          <div class="g2" style="margin-bottom:10px">
-            <div class="fr"><label class="fl">이름</label><input class="fi" id="un"></div>
-            <div class="fr"><label class="fl">이메일</label><input class="fi" id="ue" type="email"></div>
-          </div>
-          <div class="g2" style="margin-bottom:10px">
-            <div class="fr"><label class="fl">부서</label><input class="fi" id="ud" placeholder="개발팀"></div>
-            <div class="fr"><label class="fl">입사일</label><input class="fi" id="ujoin" type="date"></div>
-          </div>
-          <div class="g2" style="margin-bottom:10px">
-            <div class="fr"><label class="fl">임시 비밀번호</label><input class="fi" id="upw"></div>
-          </div>
-          <p class="hint" style="margin-bottom:10px">등록 후 이메일과 비밀번호를 직접 전달해주세요</p>
-          <button class="btn-p" onclick="addUser()"><i class="ti ti-plus"></i> 등록</button>
-        </div>
-        <div class="card" style="padding:0 20px">
-          <div class="card-title" style="padding-top:16px">구성원 목록</div>
-          <div id="ulist"></div>
-        </div>
-      </div>
-
-      <!-- 설정 -->
-      <div id="at-cfg" style="display:none">
-        <div class="g2">
-          <div class="card">
-            <div class="card-title">분기 설정</div>
-            <p class="hint" style="margin-bottom:12px">분기를 미리 등록해두면 신청일 기준으로 자동 분류됩니다</p>
-            <div class="g3" style="margin-bottom:10px">
-              <div class="fr"><label class="fl">분기명</label><input class="fi" id="cfg-q" placeholder="예) 2026 Q1"></div>
-              <div class="fr"><label class="fl">시작일</label><input class="fi" id="cfg-qs" type="date"></div>
-              <div class="fr"><label class="fl">종료일</label><input class="fi" id="cfg-qe" type="date"></div>
-            </div>
-            <button class="btn-p" onclick="addPeriod()"><i class="ti ti-plus"></i> 분기 추가</button>
-            <div id="pmsg" style="margin-top:8px;font-size:12px;color:#3B6D11"></div>
-            <div id="periods-list" style="margin-top:14px"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">반기 설정</div>
-            <div class="fr"><label class="fl">반기명</label><input class="fi" id="cfg-h" placeholder="예) 2026년 1반기"></div>
-            <div class="g2">
-              <div class="fr"><label class="fl">반기 시작일</label><input class="fi" id="cfg-hs" type="date"></div>
-              <div class="fr"><label class="fl">반기 종료일</label><input class="fi" id="cfg-he" type="date"></div>
-            </div>
-            <button class="btn-p" onclick="saveHalf()">저장</button>
-            <div id="hmsg" style="margin-top:8px;font-size:12px;color:#3B6D11"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">팀 관리</div>
-            <p class="hint" style="margin-bottom:12px">팀을 등록하면 구성원 배정 및 SaaS 팀 구독 관리에 사용됩니다</p>
-            <div style="display:flex;gap:8px;margin-bottom:12px">
-              <input class="fi" id="cfg-team-nm" placeholder="팀명 (예) PD, Biz, HR" style="flex:1">
-              <button class="btn-p" onclick="addTeam()"><i class="ti ti-plus"></i> 추가</button>
-            </div>
-            <div id="team-cfg-list"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">비밀번호 변경</div>
-            <div class="fr"><input class="fi" id="cfg-pw" type="password" placeholder="새 비밀번호"></div>
-            <button class="btn-p" onclick="changePw()">변경</button>
-            <div id="pwmsg" style="margin-top:8px;font-size:12px;color:#3B6D11"></div>
-            <hr style="border:none;border-top:1px solid var(--bd);margin:14px 0">
-            <p class="hint" style="margin-bottom:10px">신청 데이터 초기화 (구성원 유지)</p>
-            <button class="btn" style="color:#A32D2D;border-color:#F7C1C1" onclick="clearReqs()">신청 초기화</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
   </div>
 </div>
-</div>
-
-<!-- 퇴사 처리 모달 -->
-<div class="modal-bg" id="leave-modal" onclick="closeLeaveModal()">
-  <div class="modal-box" onclick="event.stopPropagation()" style="width:380px">
-    <div style="font-size:15px;font-weight:600;margin-bottom:6px">퇴사 처리</div>
-    <p class="hint" style="margin-bottom:16px">퇴사 처리 시 로그인이 불가능하고 신청도 제한됩니다.<br>기존 신청 이력은 유지됩니다.</p>
-    <input type="hidden" id="lv-id">
-    <div class="fr">
-      <label class="fl">퇴사일 <span style="color:#A32D2D">*</span></label>
-      <input class="fi" id="lv-date" type="date">
-    </div>
-    <div class="fr" style="margin-bottom:16px">
-      <label class="fl">사유 <span class="hint">(선택)</span></label>
-      <input class="fi" id="lv-reason" placeholder="예) 자발적 퇴사, 계약 만료">
-    </div>
-    <div id="lv-msg" style="margin-bottom:10px"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn" onclick="closeLeaveModal()">취소</button>
-      <button class="btn-p" style="background:#A32D2D;border-color:#A32D2D" onclick="saveLeave()">퇴사 처리</button>
-    </div>
-  </div>
-</div>
-
-<!-- 구성원 수정 모달 -->
-<div class="modal-bg" id="user-edit-modal" onclick="closeUserEdit()">
-  <div class="modal-box" onclick="event.stopPropagation()" style="width:420px">
-    <div style="font-size:15px;font-weight:600;margin-bottom:16px">구성원 정보 수정</div>
-    <input type="hidden" id="ue-id">
-    <div class="g2" style="margin-bottom:10px">
-      <div class="fr"><label class="fl">이름</label><input class="fi" id="ue-name"></div>
-      <div class="fr"><label class="fl">부서</label><input class="fi" id="ue-dept"></div>
-    </div>
-    <div class="g2" style="margin-bottom:10px">
-      <div class="fr"><label class="fl">입사일</label><input class="fi" id="ue-join" type="date"></div>
-      <div class="fr"><label class="fl">퇴사일 <span class="hint">(퇴사 시)</span></label><input class="fi" id="ue-leave" type="date"></div>
-    </div>
-    <div class="fr" style="margin-bottom:14px">
-      <label class="fl">임시 비밀번호 재설정 <span class="hint">(변경 시만 입력)</span></label>
-      <input class="fi" id="ue-pw" placeholder="빈칸이면 변경 안 함">
-    </div>
-    <div id="ue-msg" style="margin-bottom:10px"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn" onclick="closeUserEdit()">취소</button>
-      <button class="btn-p" onclick="saveUserEdit()">저장</button>
-    </div>
-  </div>
-</div>
-
-<!-- 구독 종료 모달 -->
-<div class="modal-bg" id="saas-end-modal" onclick="closeSaasEnd()">
-  <div class="modal-box" onclick="event.stopPropagation()" style="width:360px">
-    <div style="font-size:15px;font-weight:600;margin-bottom:8px">구독 종료</div>
-    <p class="hint" style="margin-bottom:14px">종료 후에도 히스토리는 유지됩니다</p>
-    <input type="hidden" id="se-id">
-    <div class="fr">
-      <label class="fl">구독 종료일 <span style="color:#A32D2D">*</span></label>
-      <input class="fi" id="se-date" type="date">
-    </div>
-    <div class="fr" style="margin-bottom:14px">
-      <label class="fl">종료 사유</label>
-      <input class="fi" id="se-reason" placeholder="예) 사용 중단, 대체 서비스 도입">
-    </div>
-    <div id="se-msg" style="margin-bottom:10px"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn" onclick="closeSaasEnd()">취소</button>
-      <button class="btn-p" onclick="saveSaasEnd()">종료 처리</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="imod" onclick="closeMod()">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <img id="mimg" src="" alt="">
-    <div style="text-align:right;margin-top:10px"><button class="btn" onclick="closeMod()">닫기</button></div>
-  </div>
 </div>
 
 <script>
-const SK='iw10';const BQ=300000;
-let CU=null;let ic=0;const ii={};let eid=null;
+// --- [데이터 관리 및 초기화 엔진] ---
+const DEFAULT_ADMIN = { id: 'u1', name: 'People팀', email: 'people@dentlink.app', dept: 'People팀', pw: 'admin1234', role: 'admin' };
 
-function D(){
-  try{const d=JSON.parse(localStorage.getItem(SK)||'null');if(d)return d;}catch(e){}
-  try{
-    for(let i=0;i<localStorage.length;i++){
-      const k=localStorage.key(i);
-      if(k&&(k.startsWith('inno_wf')||k.startsWith('iw'))&&k!==SK){
-        const o=JSON.parse(localStorage.getItem(k)||'null');
-        if(o&&o.users&&o.users.length>1){const nd={...o,saas:o.saas||[],saasReqs:o.saasReqs||[],period:o.period||{}};S(nd);return nd;}
+function loadSystemData() {
+  try {
+    const localData = localStorage.getItem('inno_welfare_data');
+    if (localData) {
+      const parsed = JSON.parse(localData);
+      if (parsed && parsed.users && parsed.users.length > 0) {
+        return parsed;
       }
     }
-} catch(e) {}
-
-const d = {
-  users: [
-    { id: 'u1', name: 'People팀', email: 'people@dentlink.app', dept: 'People팀', pw: 'admin1234', role: 'admin' }
-  ],
-  requests: [],
-  saas: [],
-  saasReqs: [],
-  period: { half: '2026년 1반기', quarter: '2026년 2분기', qdate: '' }
-};
-
-d.users.push({
-  id: 'u2',
-  name: '김진아',
-  email: 'jinakim@dentlink.app',
-  dept: '구성원',
-  pw: '1234',
-  role: 'user'
-});
-
-d.users.push({
-  id: 'u3',
-  name: '김도예',
-  email: 'doyekim@dentlink.app',
-  dept: '구성원',
-  pw: '0000',
-  role: 'user'
-});
-
-S(d);
-return d;
-}
-function S(d){localStorage.setItem(SK,JSON.stringify(d));}
-function gid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function fmt(n){return Math.round(n).toLocaleString();}
-function sa(id){document.querySelectorAll('.ni').forEach(b=>b.classList.remove('active'));document.getElementById(id)?.classList.add('active');}
-function cb(c){return c==='건강'?`<span class="cath">${c}</span>`:c==='성장'?`<span class="catg">${c}</span>`:`<span class="cate">${c}</span>`;}
-function sc(s){return s==='대기'?'bw':s==='승인'?'bo':s==='반려'?'bn':'bp';}
-
-// ── 분기 관리 ──
-let curPeriodTab='all';
-
-// 신청일 기준으로 해당 분기 자동 판별
-function detectPeriod(dateStr){
-  const d=D();const periods=d.periods||[];
-  if(!dateStr||!periods.length)return null;
-  // dateStr: "2026. 6. 4." 형식 또는 "2026-06-04" 형식
-  let dt;
-  try{
-    // ko-KR 형식 파싱
-    const clean=dateStr.replace(/\./g,'-').replace(/\s/g,'').replace(/--/g,'-').replace(/-$/,'');
-    const parts=clean.split('-').map(Number);
-    if(parts.length>=3)dt=new Date(parts[0],parts[1]-1,parts[2]);
-    else dt=new Date(dateStr);
-  }catch(e){dt=new Date(dateStr);}
-  if(isNaN(dt))return null;
-  for(const p of periods){
-    if(!p.qStart||!p.qEnd)continue;
-    const s=new Date(p.qStart);const e=new Date(p.qEnd);
-    if(dt>=s&&dt<=e)return p.quarter;
-  }
-  return null;
+  } catch(e) {}
+  
+  // 초기 데이터가 아예 없는 경우 기본값 세팅
+  return {
+    users: [DEFAULT_ADMIN],
+    requests: [],
+    saas: [],
+    saasReqs: [],
+    period: { half: '2026년 1반기', quarter: '2026년 2분기', qdate: '' }
+  };
 }
 
-// 요청 저장 시 자동으로 분기 태그 부여
-function tagRequestPeriod(req){
-  if(!req.date)return;
-  const q=detectPeriod(req.date);
-  if(q)req.quarter=q;
+// 최초 데이터 로드
+let d = loadSystemData();
+
+function S(data) {
+  d = data;
+  localStorage.setItem('inno_welfare_data', JSON.stringify(d));
 }
 
-function getAllPeriods(){
-  const d=D();return(d.periods||[]).slice().sort((a,b)=>(a.qStart||'').localeCompare(b.qStart||''));
+// --- [화면 전환 시스템 (go)] ---
+function go(screenId) {
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(s => s.classList.remove('on'));
+  
+  const targetScreen = document.getElementById('sc-' + screenId);
+  if(targetScreen) targetScreen.classList.add('on');
+  
+  const navButtons = document.querySelectorAll('.ni');
+  navButtons.forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById('sn-' + screenId);
+  if(activeBtn) activeBtn.classList.add('active');
+  
+  const pgTitle = document.getElementById('pgTitle');
+  if(screenId === 'users') pgTitle.innerText = '구성원 관리';
+  if(screenId === 'apply') pgTitle.innerText = '복지 신청';
+  if(screenId === 'mine') pgTitle.innerText = '내 현황';
+  if(screenId === 'saas') pgTitle.innerText = 'SaaS 신청';
+  if(screenId === 'myinfo') pgTitle.innerText = '내 정보';
 }
 
-function getCurrentActivePeriod(){
-  const today=new Date().toISOString().slice(0,10);
-  const periods=getAllPeriods();
-  return periods.find(p=>p.qStart<=today&&p.qEnd>=today)||periods[periods.length-1]||null;
+// 어드민 전용 탭 전환 호환 함수
+function aTab(tabId) {
+  if(tabId === 'users') go('users');
 }
 
-function renderPeriodTabs(containerId, onClickFnName){
-  const el=document.getElementById(containerId);if(!el)return;
-  const periods=getAllPeriods();
-  if(!periods.length){el.innerHTML='<span class="hint">설정에서 분기를 먼저 등록해주세요</span>';return;}
-  const activePeriod=getCurrentActivePeriod();
-  const tabs=[{quarter:'all',label:'전체'},...periods];
-  el.innerHTML=tabs.map(p=>{
-    const isActive=curPeriodTab===p.quarter;
-    const isCurrent=activePeriod&&p.quarter===activePeriod.quarter;
-    return`<button onclick="${onClickFnName}('${p.quarter}')" style="height:30px;padding:0 14px;border-radius:999px;cursor:pointer;font-size:12px;font-weight:500;border:1.5px solid ${isActive?'var(--p)':'var(--bd2)'};background:${isActive?'var(--pb)':'var(--bg)'};color:${isActive?'var(--p)':'var(--tx2)'}">${p.label||p.quarter}${isCurrent?' ●':''}</button>`;
-  }).join(' ');
-}
-
-function getReqsForPeriod(periodKey){
-  const all=D().requests;
-  if(periodKey==='all')return all;
-  return all.filter(r=>r.quarter===periodKey);
-}
-
-function getApprovedForPeriod(uid, periodKey){
-  return getReqsForPeriod(periodKey).filter(r=>r.uid===uid).reduce((s,r)=>s+(r.items||[]).filter(i=>i.status==='승인'||i.status==='부분승인').reduce((ss,i)=>ss+(i.approvedAmt||0),0),0);
-}
-
-function rst(r){
-  const it=r.items||[];if(!it.length)return r.status||'대기';
-  if(it.every(i=>i.status==='승인'))return'승인';
-  if(it.every(i=>i.status==='반려'))return'반려';
-  if(it.some(i=>!i.status||i.status==='대기'))return'대기';
-  return'부분승인';
-}
-
-function go(s){
-  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));
-  document.getElementById('sc-'+s)?.classList.add('on');
-  const T={login:'이노바이드 복지 시스템',apply:'복지 신청',mine:'내 현황',saas:'SaaS 신청',myinfo:'내 정보'};
-  document.getElementById('pgTitle').textContent=T[s]||'';
-  if(s==='apply'){rBbar('bb-apply');initI();sa('sn-apply');}
-  if(s==='mine'){rBbar('bb-mine');renderMine();sa('sn-mine');}
-  if(s==='saas'){renderMSaas();sa('sn-saas');}
-  if(s==='myinfo'){loadMyInfo();sa('sn-myinfo');}
-}
-
-function aTab(t){
-  ['dash','reqs','budgets','saas-adm','users','cfg'].forEach(s=>{const e=document.getElementById('at-'+s);if(e)e.style.display='none';});
-  document.getElementById('at-'+t).style.display='block';
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
-  document.getElementById('sc-adm').classList.add('on');
-  const T={dash:'대시보드',reqs:'신청 현황',budgets:'예산 현황','saas-adm':'SaaS 관리',users:'구성원 관리',cfg:'설정'};
-  document.getElementById('pgTitle').textContent=T[t]||'';
-  const I={dash:'sn-dash',reqs:'sn-reqs',budgets:'sn-budgets','saas-adm':'sn-saas-adm',users:'sn-users',cfg:'sn-cfg'};
-  sa(I[t]);
-  if(t==='dash')rDash();
-  if(t==='reqs')renderReqs();
-  if(t==='budgets')renderBudgets();
-  if(t==='saas-adm')renderSaasAdm();
-  if(t==='users')renderUsers();
-  if(t==='cfg')loadCfg();
-}
-
-function doLogin(){
-  const email=document.getElementById('le').value.trim().toLowerCase();
-  const pw=document.getElementById('lp').value;
-  const d=D();const u=d.users.find(x=>x.email.toLowerCase()===email&&x.pw===pw);
-  if(!u){document.getElementById('lmsg').innerHTML='<div class="msg msg-err">이메일 또는 비밀번호가 올바르지 않습니다</div>';return;}
-  if(u.role!=='admin'&&u.inactive){document.getElementById('lmsg').innerHTML='<div class="msg msg-err">비활성 계정입니다. 관리자에게 문의하세요</div>';return;}
-  CU=u;document.getElementById('lmsg').innerHTML='';document.getElementById('lp').value='';
-  document.getElementById('sbName').textContent=u.name;
-  document.getElementById('sbEmail').textContent=u.email;
-  document.getElementById('topUser').textContent=u.name;
-  document.getElementById('sn-out').style.display='';
-  if(u.role==='admin'){
-    ['sn-dash','sn-reqs','sn-budgets','sn-saas-adm','sn-users','sn-cfg'].forEach(id=>document.getElementById(id).style.display='');
-    aTab('dash');
+// --- [로그인 엔진] ---
+function doLogin() {
+  const email = document.getElementById('le').value.trim();
+  const password = document.getElementById('lp').value;
+  const lmsg = document.getElementById('lmsg');
+  
+  const user = d.users.find(u => u.email === email && u.pw === password);
+  
+  if (user) {
+    lmsg.innerText = '';
+    document.getElementById('topUser').innerText = `${user.name} (${user.dept})`;
+    go('users'); // 로그인 성공 시 구성원 관리로 바로 이동
   } else {
-    ['sn-apply','sn-mine','sn-saas','sn-myinfo'].forEach(id=>document.getElementById(id).style.display='');
-    go('apply');
+    lmsg.innerText = '이메일 또는 비밀번호가 올바르지 않습니다.';
   }
 }
 
-function doOut(){
-  CU=null;
-  ['sn-apply','sn-mine','sn-saas','sn-myinfo','sn-dash','sn-reqs','sn-budgets','sn-saas-adm','sn-users','sn-cfg','sn-out'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById('sbName').textContent='이노바이드';
-  document.getElementById('sbEmail').textContent='복지 시스템';
-  document.getElementById('topUser').textContent='';
+function doOut() {
+  document.getElementById('le').value = '';
+  document.getElementById('lp').value = '';
+  document.getElementById('topUser').innerText = '';
   go('login');
 }
 
-function getApp(uid){
-  const cq=D().period?.quarter||'';
-  return D().requests.filter(r=>r.uid===uid&&(!cq||!r.quarter||r.quarter===cq)).reduce((s,r)=>s+(r.items||[]).filter(i=>i.status==='승인'||i.status==='부분승인').reduce((ss,i)=>ss+(i.approvedAmt||0),0),0);
-}
-function getAppH(uid){
-  const ch=D().period?.half||'';
-  return D().requests.filter(r=>r.uid===uid&&(!ch||!r.half||r.half===ch)).reduce((s,r)=>s+(r.items||[]).filter(i=>i.status==='승인'||i.status==='부분승인').reduce((ss,i)=>ss+(i.approvedAmt||0),0),0);
-}
+// --- [구성원 자동 동적 추가 엔진] ---
+function addUserFromUI() {
+  const nameInput = document.getElementById('un').value.trim();
+  const emailInput = document.getElementById('ue').value.trim();
+  const deptInput = document.getElementById('ud').value.trim() || '구성원';
+  const pwInput = document.getElementById('upw').value;
+  const umsg = document.getElementById('umsg');
 
-function rBbar(id){
-  if(!CU)return;
-  const used=getApp(CU.id);const rem=BQ-used;const pct=Math.min(Math.round(used/BQ*100),100);
-  const col=pct>80?'#E24B4A':pct>50?'#EF9F27':'#7F77DD';
-  document.getElementById(id).innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-      <span style="font-weight:600">${CU.name}님의 분기 예산</span>
-      <span style="font-size:13px;color:var(--tx2)">${fmt(used)}원 사용 / 300,000원</span>
-    </div>
-    <div class="pbar"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
-    <div style="display:flex;justify-content:space-between;margin-top:6px">
-      <span class="hint">사용률 ${pct}%</span>
-      <span style="font-size:15px;font-weight:700;color:${rem<50000?'#E24B4A':'var(--tx)'}">${fmt(rem)}원 잔여</span>
-    </div>`;
-}
-
-/* ── 복지 신청 ── */
-function initI(){
-  ic=0;Object.keys(ii).forEach(k=>delete ii[k]);
-  document.getElementById('iwrap').innerHTML='';
-  document.getElementById('acat').value='';document.getElementById('anote').value='';
-  document.getElementById('tbar').style.display='none';document.getElementById('swrap').style.display='none';
-  addItem();
-}
-function addItem(){
-  ic++;const id=ic;ii[id]=null;
-  const w=document.getElementById('iwrap');const div=document.createElement('div');div.className='ib';div.id='ib-'+id;
-  div.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <span style="font-size:12px;font-weight:600;color:var(--p);background:var(--pb);padding:2px 10px;border-radius:999px">항목 ${id}</span>
-      ${id>1?`<button class="btn-sm" onclick="rmI(${id})" style="color:#A32D2D;border-color:#F7C1C1">× 삭제</button>`:''}
-    </div>
-    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:10px">
-      <div class="fr" style="margin-bottom:0"><label class="fl">항목명</label><input class="fi" id="it-${id}" placeholder="예) 무선 키보드" oninput="updT()"></div>
-      <div class="fr" style="margin-bottom:0"><label class="fl">금액 (원)</label><input class="fi" id="ia-${id}" type="number" placeholder="0" oninput="updT()"></div>
-      <div class="fr" style="margin-bottom:0"><label class="fl">수량</label><input class="fi" id="iq-${id}" type="number" value="1" min="1" oninput="updT()"></div>
-    </div>
-    <div class="fr" style="margin-bottom:10px"><label class="fl">URL</label><input class="fi" id="iu-${id}" placeholder="https://..."></div>
-    <div class="fr" style="margin-bottom:0">
-      <label class="fl">이미지 첨부 <span class="hint">(옵션 캡처)</span></label>
-      <div class="upload-zone" onclick="document.getElementById('iif-${id}').click()">
-        <input type="file" id="iif-${id}" accept="image/*" style="display:none" onchange="prvI(${id},this)">
-        <div id="iph-${id}" style="font-size:12px;color:var(--tx3)"><i class="ti ti-photo" style="font-size:18px;display:block;margin:0 auto 4px"></i>클릭하여 이미지 첨부</div>
-        <img id="ipv-${id}" class="prev-img" style="display:none">
-      </div>
-      <button id="irm-${id}" onclick="rmImg(${id})" style="display:none;font-size:12px;color:#A32D2D;background:none;border:none;cursor:pointer;margin-top:4px">× 이미지 제거</button>
-    </div>`;
-  w.appendChild(div);updT();
-}
-function rmI(id){document.getElementById('ib-'+id)?.remove();delete ii[id];
-  document.querySelectorAll('.ib').forEach((el,i)=>{const sp=el.querySelector('span');if(sp&&sp.style.background)sp.textContent=`항목 ${i+1}`;});updT();}
-function prvI(id,inp){
-  const f=inp.files[0];if(!f)return;const r=new FileReader();
-  r.onload=e=>{ii[id]=e.target.result;document.getElementById('ipv-'+id).src=ii[id];document.getElementById('ipv-'+id).style.display='block';document.getElementById('iph-'+id).style.display='none';document.getElementById('irm-'+id).style.display='block';};r.readAsDataURL(f);
-}
-function rmImg(id){ii[id]=null;document.getElementById('iif-'+id).value='';document.getElementById('ipv-'+id).style.display='none';document.getElementById('iph-'+id).style.display='block';document.getElementById('irm-'+id).style.display='none';}
-function getIs(){
-  return Array.from(document.querySelectorAll('.ib')).map(el=>{
-    const id=el.id.replace('ib-','');
-    const a=parseInt(document.getElementById('ia-'+id)?.value)||0;const q=parseInt(document.getElementById('iq-'+id)?.value)||1;
-    return{title:document.getElementById('it-'+id)?.value.trim()||'',amt:a,qty:q,url:document.getElementById('iu-'+id)?.value.trim()||'',img:ii[id]||null,status:'대기',approvedAmt:0,total:a*q};
-  });
-}
-function updT(){
-  const its=getIs();const tot=its.reduce((s,i)=>s+i.total,0);
-  const tb=document.getElementById('tbar');
-  if(tot>0){
-    tb.style.display='flex';
-    const used=CU?getApp(CU.id):0;const rem=BQ-used;const self=Math.max(0,tot-rem);
-    tb.innerHTML=`<span style="font-size:13px;color:var(--tx2)">${its.filter(i=>i.title).length}개 합계</span><span style="font-size:16px;font-weight:700">${fmt(tot)}원${self>0?`<span style="font-size:12px;font-weight:400;color:var(--tx2);margin-left:8px">(복지 ${fmt(Math.min(tot,rem))}원 + 개인 ${fmt(self)}원)</span>`:''}</span>`;
-    const sw=document.getElementById('swrap');
-    if(self>0&&rem>0){sw.style.display='block';sw.innerHTML=`<div class="split-box"><i class="ti ti-info-circle"></i> 잔여 <strong>${fmt(rem)}원</strong>만 복지 처리, <strong>${fmt(self)}원</strong>은 개인 부담</div>`;}
-    else if(rem<=0&&tot>0){sw.style.display='block';sw.innerHTML=`<div class="msg msg-err">분기 예산을 모두 사용했습니다</div>`;}
-    else sw.style.display='none';
-  } else{tb.style.display='none';document.getElementById('swrap').style.display='none';}
-}
-function openMod(src){document.getElementById('mimg').src=src;document.getElementById('imod').classList.add('on');}
-function closeMod(){document.getElementById('imod').classList.remove('on');}
-
-function submitReq(){
-  if(!CU)return;
-  const cat=document.getElementById('acat').value;const note=document.getElementById('anote').value.trim();
-  const its=getIs().filter(i=>i.title&&i.amt>0);
-  if(!cat){document.getElementById('amsg').innerHTML='<div class="msg msg-err">카테고리를 선택해주세요</div>';return;}
-  if(!its.length){document.getElementById('amsg').innerHTML='<div class="msg msg-err">항목명과 금액을 입력해주세요</div>';return;}
-  const tot=its.reduce((s,i)=>s+i.total,0);const used=getApp(CU.id);const rem=BQ-used;
-  const d=D();
-  const reqDate=new Date().toLocaleDateString('ko-KR');
-  const autoQ=detectPeriod(reqDate);
-  d.requests.push({id:gid(),uid:CU.id,name:CU.name,email:CU.email,dept:CU.dept||'',cat,amt:tot,title:its.length===1?its[0].title:`${its[0].title} 외 ${its.length-1}건`,items:its,note,welfareAmt:Math.max(0,Math.min(tot,rem)),selfAmt:Math.max(0,tot-rem),status:'대기',approvedAmt:0,date:reqDate,memo:'',quarter:autoQ||''});
-  S(d);initI();
-  document.getElementById('amsg').innerHTML='<div class="msg msg-ok">신청 완료! 관리자 승인 후 결제가 진행됩니다</div>';
-  rBbar('bb-apply');setTimeout(()=>{document.getElementById('amsg').innerHTML=''},4000);
-}
-
-/* ── 내 현황 ── */
-function renderMine(){
-  if(!CU)return;
-  const used=getApp(CU.id);const rem=BQ-used;const pct=Math.min(Math.round(used/BQ*100),100);
-  const col=pct>80?'#E24B4A':pct>50?'#EF9F27':'#7F77DD';
-  document.getElementById('bb-mine').innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px"><span style="font-weight:600">분기 예산 현황</span><span style="font-size:15px;font-weight:700;color:${rem<50000?'#E24B4A':'var(--tx)'}">${fmt(rem)}원 잔여</span></div>
-    <div class="pbar"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
-    <div style="display:flex;gap:16px;margin-top:6px;font-size:12px;color:var(--tx3)"><span>사용 ${fmt(used)}원</span><span>총 300,000원</span></div>`;
-  eid=null;
-  const reqs=D().requests.filter(r=>r.uid===CU.id).sort((a,b)=>b.id.localeCompare(a.id));
-  document.getElementById('minetb').innerHTML=reqs.length?reqs.map(r=>{const st=rst(r);return`
-    <tr class="dr" data-id="${r.id}" onclick="togRow('${r.id}','minetb',mDet)">
-      <td><i class="ti ti-chevron-right chev"></i></td>
-      <td style="font-weight:500">${r.title}</td><td>${cb(r.cat)}</td>
-      <td style="color:var(--tx2)">${r.items?.length||1}개</td>
-      <td style="color:var(--tx2)">${r.date}</td>
-      <td style="text-align:right;font-weight:700">${fmt(r.amt)}원</td>
-      <td><span class="badge ${sc(st)}">${st}</span></td>
-    </tr>`;}).join(''):'<tr><td colspan="7" class="empty">신청 내역이 없습니다</td></tr>';
-}
-
-function mDet(id){
-  const r=D().requests.find(x=>x.id===id);if(!r)return'';
-  const ih=(r.items||[]).map((it,i)=>`
-    <div class="ib-det">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
-        <span style="font-weight:600">항목 ${i+1} — ${it.title}</span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-weight:700">${fmt(it.amt)}원 × ${it.qty||1} = ${fmt(it.total||it.amt)}원</span>
-          <span class="badge ${sc(it.status||'대기')}">${it.status||'대기'}</span>
-        </div>
-      </div>
-      ${it.url?`<a href="${it.url}" target="_blank" style="font-size:12px;color:var(--p)">${it.url}</a>`:''}
-      ${it.img?`<img src="${it.img}" style="max-height:80px;margin-top:6px;border-radius:var(--r);cursor:pointer;border:1px solid var(--bd)" onclick="openMod('${it.img}')">`:''}
-      ${it.memo?`<div style="margin-top:6px;font-size:12px;color:#854F0B;background:#FAEEDA;padding:4px 8px;border-radius:var(--r)">메모: ${it.memo}</div>`:''}
-    </div>`).join('');
-  return`<div class="det"><div style="margin-bottom:12px"><div class="det-l" style="margin-bottom:8px">신청 항목</div>${ih}</div>
-    <div class="det-grid">
-      <div class="det-f"><span class="det-l">카테고리</span><span class="det-v">${cb(r.cat)}</span></div>
-      <div class="det-f"><span class="det-l">합계</span><span class="det-v" style="font-weight:700">${fmt(r.amt)}원${r.selfAmt>0?`<span style="font-size:11px;color:#185FA5;margin-left:6px">(복지 ${fmt(r.welfareAmt)}원+개인 ${fmt(r.selfAmt)}원)</span>`:''}</span></div>
-      ${r.note?`<div class="det-f"><span class="det-l">비고</span><span class="det-v">${r.note}</span></div>`:''}
-    </div></div>`;
-}
-
-/* ── SaaS 구성원 ── */
-function submitSaas(){
-  if(!CU)return;
-  const name=document.getElementById('sn').value.trim();
-  if(!name){document.getElementById('smsg').innerHTML='<div class="msg msg-err">SaaS명은 필수입니다</div>';return;}
-  const d=D();if(!d.saasReqs)d.saasReqs=[];
-  const scur2=document.getElementById('scur')?.value||'KRW';
-  const scostRaw=parseFloat(document.getElementById('sc')?.value)||0;
-  const scostKRW=scur2==='USD'?Math.round(scostRaw*1400):scostRaw;
-  const susageType=document.getElementById('stype')?.value||'personal';
-  const steamId=susageType==='team'?(document.getElementById('steam')?.value||''):'';
-  d.saasReqs.push({id:gid(),name,plan:document.getElementById('sp').value.trim(),currency:scur2,costRaw:scostRaw,cost:scostKRW,url:document.getElementById('su').value.trim(),reason:document.getElementById('sr').value.trim(),requestor:CU.name,uid:CU.id,usageType:susageType,teamId:steamId,date:new Date().toLocaleDateString('ko-KR'),status:'대기'});
-  S(d);
-  ['sn','sp','sc','su','sr'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  const scurEl=document.getElementById('scur');if(scurEl)scurEl.value='KRW';
-  document.getElementById('smsg').innerHTML='<div class="msg msg-ok">신청이 접수됐습니다! 관리자 승인 후 구독이 추가됩니다</div>';
-  renderMSaas();setTimeout(()=>{document.getElementById('smsg').innerHTML=''},4000);
-}
-
-function renderMSaas(){
-  if(!CU)return;const d=D();
-  const mine=(d.saasReqs||[]).filter(r=>r.uid===CU.id);
-  const mel=document.getElementById('my-saas');
-  if(mel){mel.innerHTML=mine.length?mine.map(r=>`
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--bd)">
-      <div><span style="font-weight:600">${r.name}</span>${r.plan?`<span class="hint" style="margin-left:6px">${r.plan}</span>`:''}
-        <div class="hint" style="margin-top:2px">${fmt(r.cost||0)}원/월${r.reason?` · ${r.reason}`:''}</div>
-        ${r.url?`<a href="${r.url}" target="_blank" style="font-size:12px;color:var(--p)">링크</a>`:''}
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-          <span class="hint">${r.date}</span>
-          <span class="badge ${sc(r.status)}">${r.status}</span>
-          ${r.status==='대기'?`<button class="btn-sm bng" onclick="cancelSaasReq('${r.id}')">취소</button>`:''}
-        </div>
-    </div>`).join(''):'<p class="hint" style="padding:8px 0">신청 내역이 없습니다</p>';}
-  const active=getMySaasActive();
-  const stb=document.getElementById('saas-mtb');
-  if(stb){stb.innerHTML=active.length?active.map(s=>`
-    <tr><td style="font-weight:500">${s.name}</td><td class="hint">${s.plan||'-'}</td><td class="hint">${s.owner||'-'}</td>
-    <td style="text-align:right;font-weight:600">${fmt(s.cost||0)}원</td>
-    <td><span style="background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:999px;font-size:11px">활성</span></td></tr>`).join('')
-    :'<tr><td colspan="5" class="empty">구독 중인 SaaS가 없습니다</td></tr>';}
-}
-
-/* ── row 펼치기 ── */
-function togRow(id,tbId,detFn){
-  const tb=document.getElementById(tbId);
-  if(eid===id){tb.querySelector('.det-row')?.remove();tb.querySelector(`tr[data-id="${id}"]`)?.classList.remove('exp');eid=null;return;}
-  if(eid){tb.querySelector('.det-row')?.remove();tb.querySelector(`tr[data-id="${eid}"]`)?.classList.remove('exp');}
-  eid=id;const row=tb.querySelector(`tr[data-id="${id}"]`);if(!row)return;
-  row.classList.add('exp');
-  const det=document.createElement('tr');det.className='det-row';
-  det.innerHTML=`<td colspan="${row.cells.length}">${detFn(id)}</td>`;
-  row.insertAdjacentElement('afterend',det);
-}
-function togRQ(e,id){if(e.target.tagName==='BUTTON')return;togRow(id,'reqs-tb',aDet);}
-
-/* ── 관리자: 대시보드 ── */
-function rDash(){
-  const d=D();const all=d.requests;const mem=d.users.filter(u=>u.role!=='admin');
-  const totApp=all.reduce((s,r)=>s+(r.items||[]).filter(i=>i.status==='승인'||i.status==='부분승인').reduce((ss,i)=>ss+(i.approvedAmt||0),0),0);
-  const wait=all.filter(r=>rst(r)==='대기'||(r.items||[]).some(i=>i.status==='대기'));
-  const tBud=mem.length*BQ;const tUsed=mem.reduce((s,u)=>s+getApp(u.id),0);
-  document.getElementById('dash-met').innerHTML=`
-    <div class="met"><div class="met-l">대기 중</div><div class="met-v" style="color:${wait.length?'#854F0B':'var(--tx)'}">${wait.length}</div></div>
-    <div class="met"><div class="met-l">분기 승인 합계</div><div class="met-v">${fmt(totApp)}원</div></div>
-    <div class="met"><div class="met-l">구성원</div><div class="met-v">${mem.length}명</div></div>
-    <div class="met"><div class="met-l">전체 소진율</div><div class="met-v">${tBud?Math.round(tUsed/tBud*100):0}%</div></div>`;
-  const pe=document.getElementById('dash-pend');
-  pe.innerHTML=wait.length?wait.slice(0,5).map(r=>{
-    const pi=(r.items||[]).filter(i=>!i.status||i.status==='대기');
-    return`<div style="border:1px solid var(--bd);border-radius:var(--r);padding:12px;margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:600">${r.title}</span><span style="font-weight:700">${fmt(r.amt)}원</span></div>
-      <div style="font-size:12px;color:var(--tx2);margin-bottom:8px">${cb(r.cat)} · ${r.name} · ${r.date}</div>
-      ${pi.map(it=>`<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:var(--bg2);border-radius:var(--r);margin-bottom:4px;font-size:12px">
-        <span style="flex:1;font-weight:500">${it.title}</span><span class="hint">${it.qty||1}개</span>
-        <span style="font-weight:600;margin-right:6px">${fmt((it.amt||0)*(it.qty||1))}원</span>
-        <button class="btn-sm bok" onclick="dI('${r.id}',${r.items.indexOf(it)},'승인')">승인</button>
-        <button class="btn-sm bng" onclick="dI('${r.id}',${r.items.indexOf(it)},'반려')">반려</button>
-      </div>`).join('')}
-    </div>`;}).join('')+(wait.length>5?`<p style="text-align:center;font-size:12px;color:var(--tx3)">+${wait.length-5}건 · <a onclick="aTab('reqs')" style="color:var(--p);cursor:pointer">전체 보기</a></p>`:'')
-  :'<p class="hint" style="padding:16px;text-align:center">대기 중인 신청이 없습니다</p>';
-  const be=document.getElementById('dash-bud');
-  be.innerHTML=mem.length?mem.map(u=>{const used=getApp(u.id);const pct=Math.min(Math.round(used/BQ*100),100);const col=pct>80?'#E24B4A':pct>50?'#EF9F27':'#7F77DD';
-    return`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)">
-      <span style="width:60px;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${u.name}</span>
-      <div style="flex:1;height:5px;background:var(--bd);border-radius:3px"><div style="width:${pct}%;height:100%;border-radius:3px;background:${col}"></div></div>
-      <span style="font-size:12px;font-weight:600;width:65px;text-align:right;color:${BQ-used<50000?'#E24B4A':'var(--tx)'}">${fmt(BQ-used)}원</span>
-    </div>`;}).join(''):'<p class="hint" style="padding:16px;text-align:center">구성원이 없습니다</p>';
-
-  // SaaS 신청 대기
-  const spe=document.getElementById('dash-saas-pend');
-  if(spe){
-    const saasWait=(d.saasReqs||[]).filter(r=>r.status==='대기');
-    if(!saasWait.length){
-      spe.innerHTML='<p class="hint" style="padding:8px 0;text-align:center">대기 중인 SaaS 신청이 없습니다</p>';
-    } else {
-      spe.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px">`+
-        saasWait.map(r=>`
-          <div style="border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
-              <span style="font-weight:600">${r.name}</span>
-              <div style="display:flex;gap:4px">
-                <button class="btn-sm bok" onclick="appSaasReq('${r.id}',true)">승인</button>
-                <button class="btn-sm bng" onclick="appSaasReq('${r.id}',false)">반려</button>
-              </div>
-            </div>
-            <div class="hint">${r.requestor}${r.plan?` · ${r.plan}`:''} · ${r.currency==='USD'?`$${r.costRaw||0}`:fmt(r.cost||0)+'원'}/월</div>
-            ${r.reason?`<div class="hint" style="margin-top:2px;color:var(--tx2)">${r.reason}</div>`:''}
-          </div>`).join('')+
-        '</div>';
-    }
+  if (!nameInput || !emailInput || !pwInput) {
+    alert('이름, 이메일, 임시 비밀번호는 필수 입력사항입니다!');
+    return;
   }
+
+  // 이메일 중복 체크
+  if (d.users.some(u => u.email === emailInput)) {
+    alert('이미 등록된 이메일 주소입니다.');
+    return;
+  }
+
+  // 동적 ID 생성 (u2, u3, u4...)
+  const nextId = 'u' + (d.users.length + 1);
+
+  const newUser = {
+    id: nextId,
+    name: nameInput,
+    email: emailInput,
+    dept: deptInput,
+    pw: pwInput,
+    role: 'user' // 가입하는 직원은 일반 구성원 등급 부여
+  };
+
+  // 기존 명단 뒤에 자동으로 붙이기
+  d.users.push(newUser);
+  S(d); // 데이터 브라우저에 즉시 세이브
+
+  umsg.innerText = `🎉 명단 등록 완료: ${nameInput}님이 추가되었습니다.`;
+  
+  // 입력창 지워주기
+  document.getElementById('un').value = '';
+  document.getElementById('ue').value = '';
+  document.getElementById('ud').value = '';
+  document.getElementById('upw').value = '';
+
+  setTimeout(() => { umsg.innerText = ''; }, 3000);
+  renderUserList();
 }
 
-/* ── 관리자: 신청 현황 ── */
-function resetF(){
-  ['fst','fcat','fteam','finact','fq','fds','fde'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  renderReqs();
-}
-function selectReqsPeriod(pk){curPeriodTab=pk;renderReqs();}
-function renderReqs(){
-  eid=null;const d=D();
-  renderPeriodTabs('period-tabs-reqs','selectReqsPeriod');
-  fillTeamFilters();
-  const st=document.getElementById('fst').value;const cat=document.getElementById('fcat').value;const q=document.getElementById('fq').value.toLowerCase();
-  const fds=document.getElementById('fds')?.value||'';
-  const fde=document.getElementById('fde')?.value||'';
-  const fteam=document.getElementById('fteam')?.value||'';
-  const finact=document.getElementById('finact')?.value||'';
-  const list=getReqsForPeriod(curPeriodTab).filter(r=>{
-    const rs=rst(r);
-    if(st&&rs!==st)return false;
-    if(cat&&r.cat!==cat)return false;
-    if(q&&!r.name.includes(q))return false;
-    // 팀 필터
-    if(fteam){const u=d.users.find(x=>x.id===r.uid);if(!u||u.teamId!==fteam)return false;}
-    // 비활성 필터
-    if(finact){const u=d.users.find(x=>x.id===r.uid);if(!u)return false;if(finact==='active'&&u.inactive)return false;if(finact==='inactive'&&!u.inactive)return false;}
-    if(fds||fde){
-      const rd=parseKoDate(r.date);
-      if(fds&&rd&&rd<fds)return false;
-      if(fde&&rd&&rd>fde)return false;
-    }
-    return true;
-  }).sort((a,b)=>rst(a)==='대기'?-1:1);
-  document.getElementById('reqs-tb').innerHTML=list.length?list.map(r=>{
-    const rs=rst(r);const ok=(r.items||[]).filter(i=>i.status==='승인').length;const ng=(r.items||[]).filter(i=>i.status==='반려').length;const wt=(r.items||[]).filter(i=>!i.status||i.status==='대기').length;
-    return`<tr class="dr" data-id="${r.id}" onclick="togRQ(event,'${r.id}')">
-      <td><i class="ti ti-chevron-right chev"></i></td>
-      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500">${r.title}</td>
-      <td><div style="font-weight:600">${r.name}</div><div class="hint">${r.dept||''}</div></td>
-      <td>${cb(r.cat)}</td><td class="hint">${r.items?.length||1}개</td><td class="hint">${r.date}</td>
-      <td style="text-align:right;font-weight:700">${fmt(r.amt)}원</td>
-      <td style="font-size:11px">${wt?`<span class="badge bw" style="margin-right:2px">대기 ${wt}</span>`:''}${ok?`<span class="badge bo" style="margin-right:2px">승인 ${ok}</span>`:''}${ng?`<span class="badge bn">반려 ${ng}</span>`:''}</td>
-      <td onclick="event.stopPropagation()" style="white-space:nowrap">
-        ${wt?`<button class="btn-sm bok" onclick="dAll('${r.id}','승인')">전체승인</button> <button class="btn-sm bng" onclick="dAll('${r.id}','반려')">전체반려</button>`:'<span class="hint">처리완료</span>'}
-      </td>
-    </tr>`;}).join(''):'<tr><td colspan="9" class="empty">신청 내역이 없습니다</td></tr>';
-}
+// --- [구성원 목록 화면 갱신 엔진] ---
+function renderUserList() {
+  const ulist = document.getElementById('ulist');
+  if (!ulist) return;
+  
+  if (d.users.length <= 1) {
+    ulist.innerHTML = '<div class="empty">등록된 구성원이 없습니다.</div>';
+    return;
+  }
 
-function aDet(id){
-  const r=D().requests.find(x=>x.id===id);if(!r)return'';
-  const mid='dm-'+id;
-  const ih=(r.items||[]).map((it,idx)=>`
-    <div class="ib-det">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <span style="font-weight:600">${it.title}</span>
-            <span class="badge ${sc(it.status||'대기')}">${it.status||'대기'}</span>
+  let html = '';
+  d.users.forEach(u => {
+    if(u.id === 'u1') return; // 기본 관리자 계정은 목록에서 숨김 처리
+    html += `
+      <div class="user-row">
+        <div class="user-info-box">
+          <div class="avatar">${u.name.substring(0,2)}</div>
+          <div>
+            <div style="font-weight:600">${u.name} <span class="hint" style="margin-left:4px">${u.dept}</span></div>
+            <div class="hint">${u.email}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-            <input id="iq2-${r.id}-${idx}" type="number" value="${it.qty||1}" min="1" style="height:26px;width:50px;padding:0 6px;font-size:12px;border:1px solid var(--bd2);border-radius:var(--r)">
-            <span class="hint">개 ×</span>
-            <input id="ia2-${r.id}-${idx}" type="number" value="${it.amt||0}" style="height:26px;width:90px;padding:0 6px;font-size:12px;border:1px solid var(--bd2);border-radius:var(--r)">
-            <span class="hint">원 = <strong id="it2-${r.id}-${idx}">${fmt((it.amt||0)*(it.qty||1))}원</strong></span>
-            <button class="btn-sm" onclick="saveAmt('${r.id}',${idx})">수정</button>
-          </div>
-          ${it.url?`<div style="margin-top:4px"><a href="${it.url}" target="_blank" style="font-size:12px;color:var(--p)"><i class="ti ti-external-link"></i> 링크</a></div>`:''}
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-          ${it.status==='대기'?`
-            <button class="btn-sm bok" onclick="dIDet('${r.id}',${idx},'승인')">승인</button>
-            <button class="btn-sm bng" onclick="dIDet('${r.id}',${idx},'반려')">반려</button>
-            <div style="display:flex;gap:4px">
-              <input id="ipt-${r.id}-${idx}" type="number" placeholder="부분금액" style="height:24px;width:80px;padding:0 6px;font-size:11px;border:1px solid var(--bd2);border-radius:var(--r)">
-              <button class="btn-sm bpt" onclick="dIPart('${r.id}',${idx})">부분</button>
-            </div>`:`<button class="btn-sm" onclick="dIDet('${r.id}',${idx},'대기')">되돌리기</button>`}
+        <div>
+          <span class="badge bp">비밀번호: ${u.pw}</span>
         </div>
       </div>
-      ${it.status==='부분승인'?`<div style="font-size:12px;color:#534AB7;background:#EEEDFE;padding:3px 8px;border-radius:var(--r);display:inline-block;margin-bottom:6px">부분승인: ${fmt(it.approvedAmt||0)}원</div>`:''}
-      ${it.img?`<img src="${it.img}" style="max-height:90px;border-radius:var(--r);cursor:pointer;border:1px solid var(--bd)" onclick="openMod('${it.img}')">`:''}
-      <div style="margin-top:8px;display:flex;gap:6px">
-        <input id="im-${r.id}-${idx}" value="${it.memo||''}" placeholder="항목 메모" style="height:26px;padding:0 8px;font-size:12px;border:1px solid var(--bd2);border-radius:var(--r);flex:1;max-width:200px">
-        <button class="btn-sm" onclick="savIM('${r.id}',${idx})">저장</button>
-      </div>
-    </div>`).join('');
-  return`<div class="det">
-    <div style="margin-bottom:14px"><div class="det-l" style="margin-bottom:8px">항목별 처리</div>${ih}</div>
-    <div class="det-grid" style="margin-bottom:14px">
-      <div class="det-f"><span class="det-l">신청자</span><span class="det-v">${r.name} · ${r.dept||''}</span></div>
-      <div class="det-f"><span class="det-l">이메일</span><span class="det-v hint">${r.email}</span></div>
-      <div class="det-f"><span class="det-l">신청일</span><span class="det-v hint">${r.date}</span></div>
-      ${r.note?`<div class="det-f" style="grid-column:span 3"><span class="det-l">비고</span><span class="det-v">${r.note}</span></div>`:''}
-    </div>
-    <div class="det-act">
-      <span style="font-size:12px;color:var(--tx2);font-weight:600">메모</span>
-      <input id="${mid}" value="${r.memo||''}" placeholder="전체 메모" style="height:32px;padding:0 10px;font-size:13px;border:1px solid var(--bd2);border-radius:var(--r);flex:1;max-width:240px">
-      <button class="btn-sm" onclick="savM('${r.id}','${mid}')">저장</button>
-    </div>
-  </div>`;
-}
-
-function dI(rid,idx,st){const d=D();const r=d.requests.find(x=>x.id===rid);if(!r||!r.items[idx])return;r.items[idx].status=st;r.items[idx].approvedAmt=st==='승인'?(r.items[idx].amt||0)*(r.items[idx].qty||1):0;r.status=rst(r);S(d);rDash();}
-function dAll(rid,st){const d=D();const r=d.requests.find(x=>x.id===rid);if(!r)return;(r.items||[]).forEach(it=>{if(it.status==='대기'){it.status=st;it.approvedAmt=st==='승인'?(it.amt||0)*(it.qty||1):0;}});r.status=rst(r);S(d);eid=null;renderReqs();}
-function dIDet(rid,idx,st){const d=D();const r=d.requests.find(x=>x.id===rid);if(!r||!r.items[idx])return;const me=document.getElementById('im-'+rid+'-'+idx);if(me)r.items[idx].memo=me.value;r.items[idx].status=st;r.items[idx].approvedAmt=st==='승인'?(r.items[idx].amt||0)*(r.items[idx].qty||1):0;r.status=rst(r);S(d);eid=null;renderReqs();setTimeout(()=>togRow(rid,'reqs-tb',aDet),50);}
-function dIPart(rid,idx){const el=document.getElementById('ipt-'+rid+'-'+idx);const amt=parseInt(el?.value)||0;if(!amt){alert('부분승인 금액을 입력해주세요');return;}const d=D();const r=d.requests.find(x=>x.id===rid);if(!r||!r.items[idx])return;r.items[idx].status='부분승인';r.items[idx].approvedAmt=amt;r.status=rst(r);S(d);eid=null;renderReqs();setTimeout(()=>togRow(rid,'reqs-tb',aDet),50);}
-function saveAmt(rid,idx){const d=D();const r=d.requests.find(x=>x.id===rid);if(!r||!r.items[idx])return;const a=parseInt(document.getElementById('ia2-'+rid+'-'+idx)?.value)||0;const q=parseInt(document.getElementById('iq2-'+rid+'-'+idx)?.value)||1;r.items[idx].amt=a;r.items[idx].qty=q;r.items[idx].total=a*q;r.amt=r.items.reduce((s,i)=>s+(i.amt||0)*(i.qty||1),0);S(d);const te=document.getElementById('it2-'+rid+'-'+idx);if(te)te.textContent=fmt(a*q)+'원';}
-function savIM(rid,idx){const d=D();const r=d.requests.find(x=>x.id===rid);if(!r||!r.items[idx])return;const el=document.getElementById('im-'+rid+'-'+idx);if(el)r.items[idx].memo=el.value;S(d);}
-function savM(id,elId){const d=D();const r=d.requests.find(x=>x.id===id);if(!r)return;r.memo=document.getElementById(elId)?.value||'';S(d);}
-
-/* ── 관리자: 예산 현황 ── */
-function selectBudPeriod(pk){curPeriodTab=pk;renderBudgets();}
-function renderBudgets(){
-  eid=null;const d=D();
-  renderPeriodTabs('period-tabs-bud','selectBudPeriod');
-  fillTeamFilters();
-  const bteam=document.getElementById('bteam')?.value||'';
-  const binact=document.getElementById('binact')?.value||'';
-  const mem=d.users.filter(u=>{
-    if(u.role==='admin')return false;
-    if(bteam&&u.teamId!==bteam)return false;
-    if(binact==='active'&&u.inactive)return false;
-    if(binact==='inactive'&&!u.inactive)return false;
-    return true;
+    `;
   });
-  if(!mem.length){document.getElementById('bud-tb').innerHTML='<tr><td colspan="7" class="empty">구성원 관리에서 먼저 등록해주세요</td></tr>';return;}
-  document.getElementById('bud-tb').innerHTML=mem.map(u=>{
-    const used=getApprovedForPeriod(u.id,curPeriodTab);const usedH=getAppH(u.id);const pct=Math.min(Math.round(used/BQ*100),100);const col=pct>80?'#E24B4A':pct>50?'#EF9F27':'#7F77DD';
-    return`<tr class="dr" data-id="${u.id}" onclick="togRow('${u.id}','bud-tb',bDet)">
-      <td><i class="ti ti-chevron-right chev"></i></td>
-      <td style="font-weight:600">${u.name}</td><td class="hint">${u.dept||'-'}</td>
-      <td>${fmt(used)}원</td>
-      <td style="min-width:140px"><div class="pbar"><div class="pfill" style="width:${pct}%;background:${col}"></div></div><span class="hint">${pct}%</span></td>
-      <td style="text-align:right;font-weight:700;color:${BQ-used<50000?'#E24B4A':'var(--tx)'}">${fmt(BQ-used)}원</td>
-      <td style="text-align:right;font-weight:700;color:${BQ*2-usedH<50000?'#E24B4A':'var(--tx3)'}">${fmt(BQ*2-usedH)}원</td>
-    </tr>`;}).join('');
+  ulist.innerHTML = html;
 }
 
-function bDet(uid){
-  const d=D();const u=d.users.find(x=>x.id===uid);if(!u)return'';
-  const used=getApp(uid);const usedH=getAppH(uid);const p=d.period||{};
-  const reqs=d.requests.filter(r=>r.uid===uid);
-  const catMap={};reqs.forEach(r=>(r.items||[]).forEach(it=>{if(it.status==='승인'||it.status==='부분승인')catMap[r.cat]=(catMap[r.cat]||0)+(it.approvedAmt||0);}));
-  const catR=Object.entries(catMap).map(([c,v])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0">${cb(c)}<span style="font-weight:600">${fmt(v)}원</span></div>`).join('');
-  const recent=reqs.slice(-5).reverse().map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bd)"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.title}</span><span class="hint" style="margin:0 8px">${r.date}</span><span style="font-weight:600;margin-right:6px">${fmt(r.amt)}원</span><span class="badge ${sc(rst(r))}">${rst(r)}</span></div>`).join('');
-  return`<div class="det"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
-    <div>
-      <div class="det-l" style="margin-bottom:8px">${p.quarter||'이번 분기'}</div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span class="hint">사용</span><span style="font-weight:700">${fmt(used)}원</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="hint">잔여</span><span style="font-weight:700;color:${BQ-used<50000?'#E24B4A':'#534AB7'}">${fmt(BQ-used)}원</span></div>
-      <div class="pbar"><div class="pfill" style="width:${Math.min(Math.round(used/BQ*100),100)}%;background:${used/BQ>0.8?'#E24B4A':used/BQ>0.5?'#EF9F27':'#7F77DD'}"></div></div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bd)">
-        <div class="det-l" style="margin-bottom:6px">${p.half||'이번 반기'}</div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span class="hint">사용</span><span style="font-weight:700">${fmt(usedH)}원</span></div>
-        <div style="display:flex;justify-content:space-between"><span class="hint">잔여</span><span style="font-weight:700;color:${BQ*2-usedH<50000?'#E24B4A':'#534AB7'}">${fmt(BQ*2-usedH)}원</span></div>
-      </div>
-    </div>
-    <div><div class="det-l" style="margin-bottom:8px">카테고리별</div>${catR||'<span class="hint">내역 없음</span>'}</div>
-    <div><div class="det-l" style="margin-bottom:8px">최근 신청</div>${recent||'<span class="hint">내역 없음</span>'}</div>
-  </div></div>`;
-}
-
-/* ── 관리자: SaaS ── */
-function openSF(id){
-  document.getElementById('sf-wrap').style.display='block';document.getElementById('sf-id').value=id||'';
-  document.getElementById('sf-ttl').textContent=id?'SaaS 구독 수정':'SaaS 구독 추가';
-  if(id){
-    const s=(D().saas||[]).find(x=>x.id===id);
-    if(s){
-      document.getElementById('sf-nm').value=s.name||'';
-      document.getElementById('sf-ct').value=s.cat||'';
-      document.getElementById('sf-cur').value=s.currency||'KRW';
-      document.getElementById('sf-cs').value=s.costRaw||s.cost||0;
-      document.getElementById('sf-st').value=s.startDate||'';
-      document.getElementById('sf-rn').value=s.renew||'';
-      document.getElementById('sf-ow').value=s.owner||'';
-      document.getElementById('sf-pl').value=s.plan||'';
-      document.getElementById('sf-nt').value=s.note||'';
-      const sfTypeEl=document.getElementById('sf-type');if(sfTypeEl)sfTypeEl.value=s.usageType||'personal';
-      updSFtype();
-      const sfTeamEl=document.getElementById('sf-team');if(sfTeamEl)sfTeamEl.value=s.teamId||'';
-      updSFcost();
-    }
-  } else {
-    ['sf-nm','sf-cs','sf-st','sf-rn','sf-ow','sf-pl','sf-nt'].forEach(i=>document.getElementById(i).value='');
-    document.getElementById('sf-cur').value='KRW';
-    document.getElementById('sf-cs-krw').value='';
-  }
-}
-function closeSF(){document.getElementById('sf-wrap').style.display='none';}
-function updSFcost(){
-  const cur=document.getElementById('sf-cur')?.value||'KRW';
-  const amt=parseFloat(document.getElementById('sf-cs')?.value)||0;
-  const label=document.getElementById('sf-cs-label');
-  const krwEl=document.getElementById('sf-cs-krw');
-  if(cur==='USD'){
-    if(label)label.textContent='원화 환산 (참고)';
-    // 환율 1400원 고정 (참고용)
-    if(krwEl){krwEl.value=amt?Math.round(amt*1400):'';krwEl.placeholder='USD×1400 (참고)';}
-  } else {
-    if(label)label.textContent='원화 금액';
-    if(krwEl){krwEl.value=amt||'';krwEl.placeholder='자동입력';}
-  }
-}
-
-function saveSaasAdm(){
-  const nm=document.getElementById('sf-nm').value.trim();if(!nm){alert('서비스명은 필수입니다');return;}
-  const id=document.getElementById('sf-id').value;
-  const cur=document.getElementById('sf-cur')?.value||'KRW';
-  const costRaw=parseFloat(document.getElementById('sf-cs')?.value)||0;
-  const costKRW=cur==='USD'?Math.round(costRaw*1400):costRaw;
-  const item={name:nm,cat:document.getElementById('sf-ct').value,currency:cur,costRaw,cost:costKRW,startDate:document.getElementById('sf-st')?.value||'',renew:document.getElementById('sf-rn').value,owner:document.getElementById('sf-ow').value.trim(),plan:document.getElementById('sf-pl').value.trim(),note:document.getElementById('sf-nt').value.trim(),status:'활성'};
-  const d=D();if(!d.saas)d.saas=[];
-  if(id){const i=d.saas.findIndex(x=>x.id===id);if(i>=0)d.saas[i]={...d.saas[i],...item};}else{d.saas.push({id:gid(),...item});}
-  S(d);closeSF();renderSaasAdm();
-}
-function delSaas(id){if(!confirm('삭제하시겠습니까?'))return;const d=D();d.saas=(d.saas||[]).filter(x=>x.id!==id);S(d);renderSaasAdm();}
-function togSaas(id){const d=D();const s=(d.saas||[]).find(x=>x.id===id);if(!s)return;s.status=s.status==='활성'?'일시중지':'활성';S(d);renderSaasAdm();}
-function appSaasReq(id,ok){
-  const d=D();const r=(d.saasReqs||[]).find(x=>x.id===id);if(!r)return;r.status=ok?'승인':'반려';
-  if(ok){
-    if(!d.saas)d.saas=[];
-    d.saas.push({id:gid(),name:r.name,plan:r.plan||'',currency:r.currency||'KRW',costRaw:r.costRaw||r.cost||0,cost:r.cost||0,owner:r.requestor,requestorUid:r.uid,usageType:r.usageType||'personal',teamId:r.teamId||'',note:r.reason||'',status:'활성',renew:'',cat:'기타',cycle:'monthly'});
-  }
-  S(d);
-  if(document.getElementById('at-dash').style.display!=='none')rDash();
-  else renderSaasAdm();
-}
-function renderSaasAdm(){
-  const d=D();const saas=d.saas||[];const reqs=(d.saasReqs||[]).filter(r=>r.status==='대기');const today=new Date();
-  const re=document.getElementById('saas-reqs');
-  if(re){re.innerHTML=reqs.length?reqs.map(r=>`
-    <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
-      <div style="flex:1"><span style="font-weight:600">${r.name}</span>${r.plan?`<span class="hint" style="margin-left:6px">${r.plan}</span>`:''}
-        <span class="hint" style="margin-left:6px">${r.requestor} · ${r.currency==='USD'?`$${r.costRaw||0} (≈${fmt(r.cost||0)}원)`:fmt(r.cost||0)+'원'}/월</span>
-        ${r.reason?`<div class="hint">${r.reason}</div>`:''}
-        ${r.url?`<a href="${r.url}" target="_blank" style="font-size:12px;color:var(--p)">링크</a>`:''}
-      </div>
-      <div style="display:flex;gap:4px;flex-shrink:0">
-        <button class="btn-sm bok" onclick="appSaasReq('${r.id}',true)">승인</button>
-        <button class="btn-sm bng" onclick="appSaasReq('${r.id}',false)">반려</button>
-      </div>
-    </div>`).join(''):'<p class="hint" style="padding:8px 0">대기 중인 신청이 없습니다</p>';}
-  const tb=document.getElementById('saas-atb');
-  if(tb){
-    const tot=saas.filter(s=>s.status==='활성').reduce((s,x)=>s+(x.cost||0),0);
-    tb.innerHTML=saas.length?saas.map(s=>{const rd=s.renew?new Date(s.renew):null;const dl=rd?Math.ceil((rd-today)/86400000):null;const rc=dl!==null&&dl<=14?'#E24B4A':dl!==null&&dl<=30?'#854F0B':'var(--tx2)';
-      const costDisp=s.currency==='USD'?`$${s.costRaw||0} <span class="hint">(≈${fmt(s.cost||0)}원)</span>`:`${fmt(s.cost||0)}원`;
-      const cycleLabel=s.cycle==='yearly'?'연 단위':'월 단위';
-      const isEnded=s.status==='구독종료';
-      return`<tr style="${isEnded?'opacity:0.6':''}">
-        <td style="font-weight:600">${s.name}${s.note?`<div class="hint">${s.note}</div>`:''}${isEnded&&s.endDate?`<div class="hint" style="color:#A32D2D">종료: ${s.endDate}${s.endReason?` · ${s.endReason}`:''}</div>`:''}</td>
-        <td class="hint">${s.cat||'-'}</td>
-        <td><span style="font-size:11px;padding:2px 7px;border-radius:999px;background:${s.usageType==='team'?'#E6F1FB':'var(--bg2)'};color:${s.usageType==='team'?'#185FA5':'var(--tx3)'}">${s.usageType==='team'?'팀':'개인'}</span></td>
-        <td class="hint">${s.plan||'-'}</td><td class="hint">${s.owner||'-'}</td>
-        <td style="font-size:12px;color:var(--tx2)">${s.startDate||'-'}</td>
-        <td class="hint">${cycleLabel}</td>
-        <td style="font-size:12px;color:${isEnded?'var(--tx3)':rc}">${isEnded?'-':s.renew?s.renew+(dl!==null?` (D-${dl})`:''): '-'}</td>
-        <td style="text-align:right;font-weight:600">${isEnded?`<span class="hint">${costDisp}</span>`:costDisp}</td>
-        <td><span style="background:${s.status==='활성'?'#EAF3DE':isEnded?'#f1efe8':'#FAEEDA'};color:${s.status==='활성'?'#3B6D11':isEnded?'#888780':'#854F0B'};padding:2px 8px;border-radius:999px;font-size:11px">${s.status}</span></td>
-        <td style="white-space:nowrap">
-          ${!isEnded?`<button class="btn-sm" onclick="openSF('${s.id}')">수정</button>
-          <button class="btn-sm" onclick="togSaas('${s.id}')" style="margin-left:3px">${s.status==='활성'?'중지':'재개'}</button>
-          <button class="btn-sm bng" onclick="openSaasEnd('${s.id}')" style="margin-left:3px">구독종료</button>`
-          :`<button class="btn-sm" onclick="togSaas('${s.id}')">재개</button>
-          <button class="btn-sm bng" onclick="delSaas('${s.id}')" style="margin-left:3px">삭제</button>`}
-        </td>
-      </tr>`;}).join(''):'<tr><td colspan="8" class="empty">등록된 구독이 없습니다</td></tr>';
-    document.getElementById('saas-tot').textContent=fmt(tot)+'원';
-  }
-}
-
-/* ── 관리자: 구성원 ── */
-function addUser(){
-  const n=document.getElementById('un').value.trim();const e=document.getElementById('ue').value.trim().toLowerCase();
-  const dept=document.getElementById('ud').value.trim();const pw=document.getElementById('upw').value.trim();
-  if(!n||!e||!pw){document.getElementById('umsg').innerHTML='<div class="msg msg-err">이름, 이메일, 비밀번호는 필수입니다</div>';return;}
-  const d=D();
-  if(d.users.find(u=>u.email.toLowerCase()===e)){document.getElementById('umsg').innerHTML='<div class="msg msg-err">이미 등록된 이메일입니다</div>';return;}
-  const ujoin=document.getElementById('ujoin')?.value||'';
-  d.users.push({id:gid(),name:n,email:e,dept,pw,role:'member',joinDate:ujoin,leaveDate:'',inactive:false});S(d);
-  ['un','ue','ud','upw','ujoin'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('umsg').innerHTML='<div class="msg msg-ok">등록 완료</div>';
-  renderUsers();setTimeout(()=>{document.getElementById('umsg').innerHTML=''},3000);
-}
-function delUser(id){if(!confirm('구성원을 삭제하시겠습니까?'))return;const d=D();d.users=d.users.filter(u=>u.id!==id);S(d);renderUsers();}
-function renderUsers(){
-  const d=D();const users=d.users.filter(u=>u.role!=='admin');
-  document.getElementById('ulist').innerHTML=users.length?users.map(u=>`
-    <div class="user-row">
-      <div class="avatar">${u.name.slice(0,2)}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600">${u.name}${u.inactive?'<span class="hint" style="margin-left:6px;color:#A32D2D">(비활성)</span>':''}</div>
-        <div class="hint">${u.email} · ${u.dept||''}${u.joinDate?` · 입사 ${u.joinDate}`:''}${u.leaveDate?` · <span style="color:#A32D2D">퇴사 ${u.leaveDate}${u.leaveReason?` (${u.leaveReason})`:''}</span>`:''}</div>
-      </div>
-      <button class="btn-sm" onclick="openUserEdit('${u.id}')">수정</button>
-      ${u.inactive
-        ? `<button class="btn-sm bng" onclick="delUser('${u.id}')" style="margin-left:4px">삭제</button>`
-        : `<button class="btn-sm" onclick="openLeaveModal('${u.id}')" style="margin-left:4px;color:#854F0B;border-color:#F5D28A">퇴사 처리</button>`
-      }
-    </div>`).join(''):'<div class="empty">등록된 구성원이 없습니다</div>';
-}
-
-/* ── 설정 ── */
-function loadCfg(){
-  const d=D();const half=d.half||{};
-  document.getElementById('cfg-h').value=half.name||'';
-  document.getElementById('cfg-hs').value=half.start||'';
-  document.getElementById('cfg-he').value=half.end||'';
-  document.getElementById('cfg-q').value='';
-  document.getElementById('cfg-qs').value='';
-  document.getElementById('cfg-qe').value='';
-  renderPeriodsTable();
-  renderTeamCfg();
-}
-
-function renderPeriodsTable(){
-  const d=D();const periods=getAllPeriods();
-  const today=new Date().toISOString().slice(0,10);
-  const pl=document.getElementById('periods-list');
-  if(!pl)return;
-  if(!periods.length){pl.innerHTML='<p class="hint">등록된 분기가 없습니다</p>';return;}
-  pl.innerHTML=`<table class="tbl"><thead><tr><th>분기명</th><th>시작일</th><th>종료일</th><th>상태</th><th></th></tr></thead><tbody>`+
-    periods.map(p=>{
-      const active=p.qStart<=today&&p.qEnd>=today;
-      return`<tr>
-        <td style="font-weight:600">${p.quarter}</td>
-        <td class="hint">${p.qStart}</td>
-        <td class="hint">${p.qEnd}</td>
-        <td>${active?'<span class="badge bo">진행 중</span>':'<span class="hint">-</span>'}</td>
-        <td><button class="btn-sm bng" onclick="delPeriod('${p.quarter}')">삭제</button></td>
-      </tr>`;}).join('')+
-    '</tbody></table>';
-}
-function addPeriod(){
-  const q=document.getElementById('cfg-q').value.trim();
-  const qs=document.getElementById('cfg-qs').value;
-  const qe=document.getElementById('cfg-qe').value;
-  if(!q||!qs||!qe){document.getElementById('pmsg').innerHTML='<span style="color:#A32D2D">분기명, 시작일, 종료일을 모두 입력해주세요</span>';return;}
-  if(qs>qe){document.getElementById('pmsg').innerHTML='<span style="color:#A32D2D">종료일이 시작일보다 빠를 수 없습니다</span>';return;}
-  const d=D();if(!d.periods)d.periods=[];
-  if(d.periods.find(p=>p.quarter===q)){document.getElementById('pmsg').innerHTML='<span style="color:#A32D2D">같은 이름의 분기가 이미 있습니다</span>';return;}
-  d.periods.push({quarter:q,qStart:qs,qEnd:qe});
-  S(d);
-  document.getElementById('cfg-q').value='';document.getElementById('cfg-qs').value='';document.getElementById('cfg-qe').value='';
-  document.getElementById('pmsg').innerHTML='<span style="color:#3B6D11">분기 추가 완료!</span>';
-  renderPeriodsTable();
-  // 기존 신청 중 날짜 기준 분기 미지정인 것 재태깅
-  retagRequests();
-  setTimeout(()=>{document.getElementById('pmsg').innerHTML=''},3000);
-}
-
-function delPeriod(q){
-  if(!confirm(`"${q}" 분기를 삭제하시겠습니까?`))return;
-  const d=D();d.periods=(d.periods||[]).filter(p=>p.quarter!==q);S(d);renderPeriodsTable();
-}
-
-function saveHalf(){
-  const d=D();
-  d.half={name:document.getElementById('cfg-h').value,start:document.getElementById('cfg-hs').value,end:document.getElementById('cfg-he').value};
-  S(d);document.getElementById('hmsg').textContent='저장 완료';setTimeout(()=>{document.getElementById('hmsg').textContent=''},2500);
-}
-
-// 기존 신청들 날짜 기준 분기 재태깅
-function retagRequests(){
-  const d=D();let changed=0;
-  (d.requests||[]).forEach(r=>{
-    if(!r.quarter||r.quarter===''){
-      const q=detectPeriod(r.date);
-      if(q){r.quarter=q;changed++;}
-    }
-  });
-  if(changed>0){S(d);}
-}
-function changePw(){
-  const np=document.getElementById('cfg-pw').value;if(!np)return;
-  const d=D();const u=d.users.find(x=>x.id==='u1');if(u)u.pw=np;S(d);
-  document.getElementById('pwmsg').textContent='변경 완료';document.getElementById('cfg-pw').value='';setTimeout(()=>{document.getElementById('pwmsg').textContent=''},3000);
-}
-function loadMyInfo(){
-  if(!CU)return;
-  document.getElementById('mi-name').value=CU.name||'';
-  document.getElementById('mi-email').value=CU.email||'';
-  document.getElementById('mi-dept').value=CU.dept||'';
-  document.getElementById('mi-cur').value='';
-  document.getElementById('mi-new').value='';
-  document.getElementById('mi-con').value='';
-  document.getElementById('myinfo-msg').innerHTML='';
-}
-
-function saveMyInfo(){
-  if(!CU)return;
-  const dept=document.getElementById('mi-dept').value.trim();
-  const cur=document.getElementById('mi-cur').value;
-  const nw=document.getElementById('mi-new').value;
-  const con=document.getElementById('mi-con').value;
-  const d=D();const u=d.users.find(x=>x.id===CU.id);if(!u)return;
-  // 부서 변경
-  u.dept=dept;CU.dept=dept;
-  // 비밀번호 변경 (입력한 경우만)
-  if(cur||nw||con){
-    if(!cur){document.getElementById('myinfo-msg').innerHTML='<div class="msg msg-err">현재 비밀번호를 입력해주세요</div>';return;}
-    if(cur!==u.pw){document.getElementById('myinfo-msg').innerHTML='<div class="msg msg-err">현재 비밀번호가 올바르지 않습니다</div>';return;}
-    if(!nw){document.getElementById('myinfo-msg').innerHTML='<div class="msg msg-err">새 비밀번호를 입력해주세요</div>';return;}
-    if(nw!==con){document.getElementById('myinfo-msg').innerHTML='<div class="msg msg-err">새 비밀번호가 일치하지 않습니다</div>';return;}
-    if(nw.length<4){document.getElementById('myinfo-msg').innerHTML='<div class="msg msg-err">비밀번호는 4자 이상이어야 합니다</div>';return;}
-    u.pw=nw;CU.pw=nw;
-    document.getElementById('mi-cur').value='';
-    document.getElementById('mi-new').value='';
-    document.getElementById('mi-con').value='';
-  }
-  S(d);
-  document.getElementById('sbName').textContent=u.name;
-  document.getElementById('sbEmail').textContent=u.email;
-  document.getElementById('myinfo-msg').innerHTML='<div class="msg msg-ok">저장 완료!</div>';
-  setTimeout(()=>{document.getElementById('myinfo-msg').innerHTML=''},3000);
-}
-
-
-// ── SaaS 구성원 폼 통화 라벨 ──
-function updMSaasLabel(){
-  const cur=document.getElementById('scur')?.value||'KRW';
-  const label=document.querySelector('label[for="sc"]');
-  // 라벨 없으니 placeholder로 처리
-  const inp=document.getElementById('sc');
-  if(inp)inp.placeholder=cur==='USD'?'0 ($)':'0';
-}
-
-// ── SaaS 갱신일 자동 계산 ──
-function calcNextRenew(){
-  const st=document.getElementById('sf-st')?.value;
-  const cycle=document.getElementById('sf-cycle')?.value||'monthly';
-  const rnEl=document.getElementById('sf-rn');
-  if(!st||!rnEl)return;
-  const d=new Date(st);
-  if(cycle==='monthly'){d.setMonth(d.getMonth()+1);}
-  else{d.setFullYear(d.getFullYear()+1);}
-  rnEl.value=d.toISOString().slice(0,10);
-}
-
-// ── saveSaasAdm: cycle 저장 + renew 자동계산 포함 ──
-// (기존 함수 덮어쓰기)
-function saveSaasAdm(){
-  const nm=document.getElementById('sf-nm').value.trim();if(!nm){alert('서비스명은 필수입니다');return;}
-  const id=document.getElementById('sf-id').value;
-  const cur=document.getElementById('sf-cur')?.value||'KRW';
-  const costRaw=parseFloat(document.getElementById('sf-cs')?.value)||0;
-  const costKRW=cur==='USD'?Math.round(costRaw*1400):costRaw;
-  const cycle=document.getElementById('sf-cycle')?.value||'monthly';
-  const startDate=document.getElementById('sf-st')?.value||'';
-  // 갱신일 자동계산
-  let renew='';
-  if(startDate){
-    const rd=new Date(startDate);
-    if(cycle==='monthly')rd.setMonth(rd.getMonth()+1);
-    else rd.setFullYear(rd.getFullYear()+1);
-    renew=rd.toISOString().slice(0,10);
-  }
-  const sfType=document.getElementById('sf-type')?.value||'personal';
-  const sfTeamId=sfType==='team'?(document.getElementById('sf-team')?.value||''):'';
-  const item={name:nm,cat:document.getElementById('sf-ct').value,currency:cur,costRaw,cost:costKRW,cycle,startDate,renew,owner:document.getElementById('sf-ow').value.trim(),plan:document.getElementById('sf-pl').value.trim(),note:document.getElementById('sf-nt').value.trim(),status:'활성',usageType:sfType,teamId:sfTeamId};
-  const d=D();if(!d.saas)d.saas=[];
-  if(id){const i=d.saas.findIndex(x=>x.id===id);if(i>=0)d.saas[i]={...d.saas[i],...item};}
-  else{d.saas.push({id:gid(),...item});}
-  S(d);closeSF();renderSaasAdm();
-}
-
-// ── openSF: cycle 불러오기 ──
-function openSF(id){
-  document.getElementById('sf-wrap').style.display='block';document.getElementById('sf-id').value=id||'';
-  document.getElementById('sf-ttl').textContent=id?'SaaS 구독 수정':'SaaS 구독 추가';
-  if(id){
-    const s=(D().saas||[]).find(x=>x.id===id);
-    if(s){
-      document.getElementById('sf-nm').value=s.name||'';
-      document.getElementById('sf-ct').value=s.cat||'';
-      document.getElementById('sf-cur').value=s.currency||'KRW';
-      document.getElementById('sf-cs').value=s.costRaw||s.cost||0;
-      document.getElementById('sf-cycle').value=s.cycle||'monthly';
-      document.getElementById('sf-st').value=s.startDate||'';
-      document.getElementById('sf-rn').value=s.renew||'';
-      document.getElementById('sf-ow').value=s.owner||'';
-      document.getElementById('sf-pl').value=s.plan||'';
-      document.getElementById('sf-nt').value=s.note||'';
-      const sfTypeEl=document.getElementById('sf-type');if(sfTypeEl)sfTypeEl.value=s.usageType||'personal';
-      updSFtype();
-      const sfTeamEl=document.getElementById('sf-team');if(sfTeamEl)sfTeamEl.value=s.teamId||'';
-      updSFcost();
-    }
-  } else {
-    ['sf-nm','sf-cs','sf-st','sf-rn','sf-ow','sf-pl','sf-nt'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
-    document.getElementById('sf-cur').value='KRW';
-    document.getElementById('sf-cycle').value='monthly';
-    const rkEl=document.getElementById('sf-cs-krw');if(rkEl)rkEl.value='';
-  }
-}
-
-// ── 구독 종료 ──
-function openSaasEnd(id){
-  document.getElementById('se-id').value=id;
-  document.getElementById('se-date').value='';
-  document.getElementById('se-reason').value='';
-  document.getElementById('se-msg').innerHTML='';
-  document.getElementById('saas-end-modal').classList.add('on');
-}
-function closeSaasEnd(){document.getElementById('saas-end-modal').classList.remove('on');}
-function saveSaasEnd(){
-  const id=document.getElementById('se-id').value;
-  const endDate=document.getElementById('se-date').value;
-  const reason=document.getElementById('se-reason').value.trim();
-  if(!endDate){document.getElementById('se-msg').innerHTML='<div class="msg msg-err">종료일은 필수입니다</div>';return;}
-  const d=D();const s=(d.saas||[]).find(x=>x.id===id);if(!s)return;
-  s.status='구독종료';s.endDate=endDate;s.endReason=reason;
-  S(d);closeSaasEnd();renderSaasAdm();
-}
-
-// ── 구성원 수정 ──
-function openUserEdit(uid){
-  const u=D().users.find(x=>x.id===uid);if(!u)return;
-  document.getElementById('ue-id').value=uid;
-  document.getElementById('ue-name').value=u.name||'';
-  document.getElementById('ue-dept').value=u.dept||'';
-  document.getElementById('ue-join').value=u.joinDate||'';
-  document.getElementById('ue-leave').value=u.leaveDate||'';
-  document.getElementById('ue-pw').value='';
-  document.getElementById('ue-msg').innerHTML='';
-  document.getElementById('user-edit-modal').classList.add('on');
-}
-function closeUserEdit(){document.getElementById('user-edit-modal').classList.remove('on');}
-function saveUserEdit(){
-  const uid=document.getElementById('ue-id').value;
-  const name=document.getElementById('ue-name').value.trim();
-  const dept=document.getElementById('ue-dept').value.trim();
-  const join=document.getElementById('ue-join').value;
-  const leave=document.getElementById('ue-leave').value;
-  const pw=document.getElementById('ue-pw').value.trim();
-  if(!name){document.getElementById('ue-msg').innerHTML='<div class="msg msg-err">이름은 필수입니다</div>';return;}
-  const d=D();const u=d.users.find(x=>x.id===uid);if(!u)return;
-  u.name=name;u.dept=dept;u.joinDate=join;u.leaveDate=leave;
-  if(pw)u.pw=pw;
-  // 퇴사일 있으면 비활성 처리
-  if(leave&&new Date(leave)<=new Date()){u.inactive=true;}
-  else{u.inactive=false;}
-  S(d);closeUserEdit();renderUsers();
-}
-
-// ── 기존 delUser: 삭제 대신 비활성 처리 ──
-function delUser(id){
-  const d=D();const u=d.users.find(x=>x.id===id);if(!u)return;
-  if(!confirm(`${u.name}님을 완전히 삭제하시겠습니까?\n삭제 시 계정은 사라지지만 신청 이력은 유지됩니다`))return;
-  d.users=d.users.filter(x=>x.id!==id);
-  S(d);renderUsers();
-}
-
-// ── 구성원 SaaS 신청 취소 ──
-function cancelSaasReq(id){
-  if(!confirm('신청을 취소하시겠습니까?'))return;
-  const d=D();const r=(d.saasReqs||[]).find(x=>x.id===id);
-  if(!r||r.status!=='대기'){alert('대기 중인 신청만 취소할 수 있습니다');return;}
-  r.status='취소';S(d);renderMSaas();
-}
-
-// ── doLogin: 비활성 구성원 로그인 차단 ──
-function openLeaveModal(uid){
-  const u=D().users.find(x=>x.id===uid);if(!u)return;
-  document.getElementById('lv-id').value=uid;
-  document.getElementById('lv-date').value='';
-  document.getElementById('lv-reason').value='';
-  document.getElementById('lv-msg').innerHTML='';
-  document.getElementById('leave-modal').classList.add('on');
-}
-function closeLeaveModal(){document.getElementById('leave-modal').classList.remove('on');}
-function saveLeave(){
-  const uid=document.getElementById('lv-id').value;
-  const date=document.getElementById('lv-date').value;
-  const reason=document.getElementById('lv-reason').value.trim();
-  if(!date){document.getElementById('lv-msg').innerHTML='<div class="msg msg-err">퇴사일은 필수입니다</div>';return;}
-  const d=D();const u=d.users.find(x=>x.id===uid);if(!u)return;
-  u.leaveDate=date;u.leaveReason=reason;u.inactive=true;
-  S(d);closeLeaveModal();renderUsers();
-}
-
-
-// 한국어 날짜 → ISO 변환 (예: "2026. 6. 4." → "2026-06-04")
-function parseKoDate(dateStr){
-  if(!dateStr)return null;
-  try{
-    if(dateStr.includes('-'))return dateStr; // 이미 ISO
-    const clean=dateStr.replace(/\s/g,'').replace(/\.+$/,'');
-    const parts=clean.split('.').map(Number);
-    if(parts.length>=3)return`${parts[0]}-${String(parts[1]).padStart(2,'0')}-${String(parts[2]).padStart(2,'0')}`;
-  }catch(e){}
-  return null;
-}
-
-function setDateRange(type){
-  const d=D();const today=new Date();
-  let start,end;
-  if(type==='quarter'){
-    const active=getCurrentActivePeriod();
-    if(active){start=active.qStart;end=active.qEnd;}
-    else{
-      // 현재 분기 추정 (3개월)
-      const m=today.getMonth();const q=Math.floor(m/3);
-      start=new Date(today.getFullYear(),q*3,1).toISOString().slice(0,10);
-      end=new Date(today.getFullYear(),q*3+3,0).toISOString().slice(0,10);
-    }
-  } else if(type==='half'){
-    const half=d.half||{};
-    if(half.start&&half.end){start=half.start;end=half.end;}
-    else{
-      const m=today.getMonth();const h=m<6?0:6;
-      start=new Date(today.getFullYear(),h,1).toISOString().slice(0,10);
-      end=new Date(today.getFullYear(),h+6,0).toISOString().slice(0,10);
-    }
-  } else {
-    start=`${today.getFullYear()}-01-01`;
-    end=`${today.getFullYear()}-12-31`;
-  }
-  const sEl=document.getElementById('fds');const eEl=document.getElementById('fde');
-  if(sEl)sEl.value=start;if(eEl)eEl.value=end;
-  renderReqs();
-}
-
-// ── 팀 관리 (설정) ──
-function addTeam(){
-  const nm=document.getElementById('cfg-team-nm')?.value.trim();
-  if(!nm){alert('팀명을 입력해주세요');return;}
-  const d=D();if(!d.teams)d.teams=[];
-  if(d.teams.find(t=>t.name===nm)){alert('이미 존재하는 팀명입니다');return;}
-  d.teams.push({id:gid(),name:nm,expenses:[]});
-  S(d);document.getElementById('cfg-team-nm').value='';
-  renderTeamCfg();fillTeamSelect();fillTeamFilters();
-}
-function delTeam(id){
-  if(!confirm('팀을 삭제하시겠습니까? 구성원의 팀 배정도 해제됩니다'))return;
-  const d=D();d.teams=(d.teams||[]).filter(t=>t.id!==id);
-  d.users.forEach(u=>{if(u.teamId===id)u.teamId='';});
-  S(d);renderTeamCfg();fillTeamSelect();fillTeamFilters();
-}
-function renderTeamCfg(){
-  const d=D();const teams=d.teams||[];
-  const el=document.getElementById('team-cfg-list');if(!el)return;
-  el.innerHTML=teams.length?teams.map(t=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bd)">
-      <span style="font-size:13px;font-weight:500">${t.name}</span>
-      <button class="btn-sm bng" onclick="delTeam('${t.id}')">삭제</button>
-    </div>`).join(''):'<p class="hint">등록된 팀이 없습니다</p>';
-}
-
-// ── SaaS 개인/팀 구분 (구성원) ──
-function updSaasType(){
-  const type=document.getElementById('stype')?.value;
-  const wrap=document.getElementById('steam-wrap');
-  if(!wrap)return;
-  wrap.style.display=type==='team'?'block':'none';
-  if(type==='team')fillSaasTeamSelect();
-}
-function fillSaasTeamSelect(){
-  const sel=document.getElementById('steam');if(!sel)return;
-  const teams=D().teams||[];
-  sel.innerHTML='<option value="">팀 선택</option>'+teams.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-}
-
-// ── SaaS 개인/팀 구분 (관리자) ──
-function updSFtype(){
-  const type=document.getElementById('sf-type')?.value;
-  const wrap=document.getElementById('sf-team-wrap');
-  if(!wrap)return;
-  wrap.style.display=type==='team'?'block':'none';
-  if(type==='team'){
-    const sel=document.getElementById('sf-team');if(!sel)return;
-    const teams=D().teams||[];
-    sel.innerHTML='<option value="">팀 선택</option>'+teams.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-  }
-}
-
-// ── SaaS 구성원 현황: 팀 구독은 팀원 모두에게 표시 ──
-function getMySaasActive(){
-  if(!CU)return[];
-  const d=D();
-  return(d.saas||[]).filter(s=>{
-    if(s.status!=='활성')return false;
-    if(s.usageType==='team'&&s.teamId){
-      // 팀원이면 표시
-      return CU.teamId===s.teamId;
-    }
-    // 개인: 신청자 본인이거나 담당자 이름 일치
-    return s.requestorUid===CU.id||s.owner===CU.name;
-  });
-}
-function clearReqs(){if(!confirm('신청 데이터를 초기화하시겠습니까?'))return;const d=D();d.requests=[];S(d);rDash();}
+// 웹 앱 첫 실행 시 기본 리스트업 작동
+window.onload = function() {
+  renderUserList();
+};
 </script>
 </body>
 </html>
