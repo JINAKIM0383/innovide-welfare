@@ -1,349 +1,1042 @@
 <!DOCTYPE html>
+
 <html lang="ko">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>이노바이드 복지 시스템</title>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+
 <style>
+
 *{box-sizing:border-box;margin:0;padding:0}
+
 :root{--p:#534AB7;--pb:#EEEDFE;--bg:#fff;--bg2:#f8f8f7;--bg3:#f1efe8;--tx:#1a1a18;--tx2:#5f5e5a;--tx3:#888780;--bd:#e8e8e4;--bd2:#d3d1c7;--r:8px}
+
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo',sans-serif;font-size:14px;color:var(--tx);background:var(--bg3)}
+
 .layout{display:flex;height:100vh;overflow:hidden}
+
 .sb{width:192px;background:var(--bg);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0}
+
 .sb-top{padding:16px;border-bottom:1px solid var(--bd)}
+
 .sb-name{font-size:13px;font-weight:600}
+
 .sb-email{font-size:11px;color:var(--tx3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 .sb-nav{padding:6px 0;flex:1;overflow-y:auto}
+
 .ni{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:13px;color:var(--tx2);cursor:pointer;border:none;background:none;width:100%;text-align:left}
+
 .ni:hover{background:var(--bg2)}
+
 .ni.active{background:var(--pb);color:var(--p);font-weight:500}
+
 .ni i{font-size:16px;flex-shrink:0}
+
 .sb-bot{padding:10px 14px;border-top:1px solid var(--bd)}
+
 .main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+
 .topbar{height:48px;padding:0 24px;border-bottom:1px solid var(--bd);background:var(--bg);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+
 .topbar-title{font-size:14px;font-weight:600}
+
 .content{padding:20px 24px;flex:1;overflow-y:auto}
+
 .screen{display:none}.screen.on{display:block}
+
 .login-wrap{display:flex;align-items:center;justify-content:center;min-height:500px}
+
 .login-box{width:380px;text-align:center}
+
 .login-icon{width:56px;height:56px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--tx2)}
+
 .login-title{font-size:18px;font-weight:600;margin-bottom:28px}
+
 .lf{margin-bottom:16px;text-align:left}
+
 .ll{font-size:12px;color:var(--tx2);margin-bottom:5px;display:block}
+
 .li{width:100%;border:none;border-bottom:1.5px solid var(--bd2);padding:8px 0;font-size:14px;background:transparent;color:var(--tx);outline:none}
+
 .li:focus{border-bottom-color:var(--p)}
+
 .btn-login{width:100%;height:46px;background:var(--p);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;margin-top:24px}
+
 .card{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);padding:16px 20px;margin-bottom:14px}
+
 .card-title{font-size:14px;font-weight:600;margin-bottom:14px}
+
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
 .fr{margin-bottom:10px}
+
 .fl{font-size:12px;color:var(--tx2);margin-bottom:4px;display:block}
+
 .fi{width:100%;height:38px;padding:0 12px;border:1px solid var(--bd2);border-radius:var(--r);font-size:13px;color:var(--tx);background:var(--bg);outline:none}
+
 .fi:focus{border-color:var(--p)}
+
 .fs{width:100%;height:38px;padding:0 12px;border:1px solid var(--bd2);border-radius:var(--r);font-size:13px;color:var(--tx);background:var(--bg)}
+
 .fta{width:100%;padding:9px 12px;border:1px solid var(--bd2);border-radius:var(--r);font-size:13px;color:var(--tx);background:var(--bg);resize:vertical;min-height:72px;outline:none;font-family:inherit}
+
 .fta:focus{border-color:var(--p)}
+
 .bbar{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);padding:16px 20px;margin-bottom:14px}
+
 .btn{height:34px;padding:0 16px;border-radius:var(--r);cursor:pointer;font-size:13px;font-weight:500;border:1px solid var(--bd2);background:var(--bg);color:var(--tx2)}
+
 .btn:hover{background:var(--bg2)}
+
 .btn-p{height:34px;padding:0 16px;border-radius:var(--r);cursor:pointer;font-size:13px;font-weight:500;background:var(--p);color:#fff;border:none}
+
 .btn-p:hover{background:#3C3489}
+
 .btn-sm{height:26px;padding:0 9px;font-size:12px;border-radius:var(--r);cursor:pointer;border:1px solid var(--bd2);background:var(--bg);color:var(--tx2);font-weight:500}
+
 .bok{background:#EAF3DE;color:#3B6D11;border-color:#C0DD97}
+
 .bng{background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1}
+
 .bpt{background:#EEEDFE;color:#534AB7;border-color:#AFA9EC}
+
 .msg{padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:12px}
+
 .msg-ok{background:#EAF3DE;color:#3B6D11}
+
 .msg-err{background:#FCEBEB;color:#A32D2D}
+
 .split-box{background:#E6F1FB;border:1px solid #85B7EB;border-radius:var(--r);padding:10px 14px;margin-bottom:12px;font-size:13px;color:#185FA5}
+
 .ib{border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;background:var(--bg2)}
+
 .add-btn{width:100%;height:36px;border:1.5px dashed var(--bd2);border-radius:var(--r);background:none;cursor:pointer;font-size:13px;color:var(--tx2);display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:14px}
+
 .add-btn:hover{border-color:var(--p);color:var(--p);background:var(--pb)}
+
 .tbar{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+
 .upload-zone{border:1.5px dashed var(--bd2);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer;background:var(--bg2)}
+
 .upload-zone:hover{border-color:var(--p)}
+
 .prev-img{max-width:100%;max-height:120px;border-radius:var(--r);margin-top:8px;border:1px solid var(--bd)}
+
 .thumb{width:38px;height:38px;object-fit:cover;border-radius:var(--r);border:1px solid var(--bd);cursor:pointer;vertical-align:middle}
+
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+
 .met{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px}
+
 .met-l{font-size:11px;color:var(--tx2);font-weight:600;margin-bottom:4px}
+
 .met-v{font-size:22px;font-weight:700}
+
 .frow{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+
 .frow select,.frow input{height:32px;font-size:13px;padding:0 10px;border:1px solid var(--bd2);border-radius:var(--r);background:var(--bg);color:var(--tx)}
+
 .frow input{flex:1;min-width:120px}
+
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
+
 .tbl th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--tx2);border-bottom:1px solid var(--bd);background:var(--bg2);white-space:nowrap}
+
 .tbl td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:middle}
+
 .tbl tr:last-child td{border-bottom:none}
+
 .tbl tr.dr{cursor:pointer}
+
 .tbl tr.dr:hover td{background:#fafaf9}
+
 .tbl tr.dr.exp td{background:var(--pb)}
+
 .det-row td{padding:0;background:var(--bg2)!important;border-bottom:1px solid var(--bd)}
+
 .det{padding:16px 20px}
+
 .det-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+
 .det-f{display:flex;flex-direction:column;gap:3px}
+
 .det-l{font-size:11px;color:var(--tx3);font-weight:600}
+
 .det-v{font-size:13px;color:var(--tx)}
+
 .ib-det{border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;background:var(--bg);margin-bottom:8px}
+
 .ib-det:last-child{margin-bottom:0}
+
 .det-act{display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid var(--bd)}
+
 .badge{display:inline-block;padding:2px 8px;border-radius:var(--r);font-size:11px;font-weight:600}
+
 .bw{background:#FAEEDA;color:#854F0B}
+
 .bo{background:#EAF3DE;color:#3B6D11}
+
 .bn{background:#FCEBEB;color:#A32D2D}
+
 .bp{background:#EEEDFE;color:#534AB7}
+
 .pbar{height:5px;background:var(--bd);border-radius:3px;margin-top:4px}
+
 .pfill{height:100%;border-radius:3px}
+
 .cath{background:#E1F5EE;color:#0F6E56;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500}
+
 .catg{background:#EEEDFE;color:#534AB7;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500}
+
 .cate{background:#FAEEDA;color:#854F0B;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500}
-.user-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd);justify-content:space-between}
-.user-info-box{display:flex;align-items:center;gap:12px}
+
+.user-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+
+.user-row:last-child{border-bottom:none}
+
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--pb);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--p);flex-shrink:0}
+
 .hint{font-size:11px;color:var(--tx3)}
+
 .empty{text-align:center;padding:28px;font-size:13px;color:var(--tx3)}
+
 .chev{transition:transform .2s;font-size:14px;color:var(--tx3)}
+
 .exp .chev{transform:rotate(180deg)}
+
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center}
+
 .modal-bg.on{display:flex}
+
 .modal-box{background:var(--bg);border-radius:12px;padding:16px;max-width:90vw;max-height:88vh;overflow:auto}
+
 .modal-box img{max-width:75vw;max-height:70vh;display:block;border-radius:var(--r)}
+
 </style>
+
 </head>
+
 <body>
+
 <div class="layout">
+
 <div class="sb">
+
   <div class="sb-top">
+
     <div class="sb-name" id="sbName">이노바이드</div>
+
     <div class="sb-email" id="sbEmail">복지 시스템</div>
+
   </div>
+
   <nav class="sb-nav">
-    <button class="ni" id="sn-apply" onclick="go('apply')"><i class="ti ti-gift"></i>복지 신청</button>
-    <button class="ni" id="sn-mine" onclick="go('mine')"><i class="ti ti-list-check"></i>내 현황</button>
-    <button class="ni" id="sn-saas" onclick="go('saas')"><i class="ti ti-brand-appstore"></i>SaaS 신청</button>
-    <button class="ni" id="sn-myinfo" onclick="go('myinfo')"><i class="ti ti-user-circle"></i>내 정보</button>
-    <button class="ni" id="sn-users" onclick="go('users')"><i class="ti ti-users"></i>구성원 관리</button>
+
+    <button class="ni" id="sn-apply" onclick="go('apply')" style="display:none"><i class="ti ti-gift"></i>복지 신청</button>
+
+    <button class="ni" id="sn-mine" onclick="go('mine')" style="display:none"><i class="ti ti-list-check"></i>내 현황</button>
+
+    <button class="ni" id="sn-saas" onclick="go('saas')" style="display:none"><i class="ti ti-brand-appstore"></i>SaaS 신청</button>
+
+    <button class="ni" id="sn-myinfo" onclick="go('myinfo')" style="display:none"><i class="ti ti-user-circle"></i>내 정보</button>
+
+    <button class="ni" id="sn-dash" onclick="aTab('dash')" style="display:none"><i class="ti ti-layout-dashboard"></i>대시보드</button>
+
+    <button class="ni" id="sn-reqs" onclick="aTab('reqs')" style="display:none"><i class="ti ti-inbox"></i>신청 현황</button>
+
+    <button class="ni" id="sn-budgets" onclick="aTab('budgets')" style="display:none"><i class="ti ti-chart-bar"></i>예산 현황</button>
+
+    <button class="ni" id="sn-saas-adm" onclick="aTab('saas-adm')" style="display:none"><i class="ti ti-brand-appstore"></i>SaaS 관리</button>
+
+    <button class="ni" id="sn-users" onclick="aTab('users')" style="display:none"><i class="ti ti-users"></i>구성원 관리</button>
+
+    <button class="ni" id="sn-cfg" onclick="aTab('cfg')" style="display:none"><i class="ti ti-settings"></i>설정</button>
+
   </nav>
+
   <div class="sb-bot">
-    <button class="ni" id="sn-out" onclick="doOut()" style="padding:0;color:var(--tx3)"><i class="ti ti-logout"></i>로그아웃</button>
+
+    <button class="ni" id="sn-out" onclick="doOut()" style="display:none;padding:0;color:var(--tx3)"><i class="ti ti-logout"></i>로그아웃</button>
+
   </div>
+
 </div>
+
 <div class="main">
+
   <div class="topbar">
+
     <span class="topbar-title" id="pgTitle">이노바이드 복지 시스템</span>
+
     <span style="font-size:12px;color:var(--tx3)" id="topUser"></span>
+
   </div>
+
   <div class="content">
 
+
+
+    <!-- 로그인 -->
+
     <div id="sc-login" class="screen on">
+
       <div class="login-wrap"><div class="login-box">
+
         <div class="login-icon"><i class="ti ti-user" style="font-size:24px"></i></div>
+
         <div class="login-title">이노바이드 복지 시스템</div>
-        <div id="lmsg" style="color:red;font-size:12px;margin-bottom:10px"></div>
+
+        <div id="lmsg"></div>
+
         <div class="lf"><label class="ll">이메일</label><input class="li" id="le" type="email" placeholder="회사 이메일 입력"></div>
+
         <div class="lf"><label class="ll">비밀번호</label><input class="li" id="lp" type="password" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doLogin()"></div>
+
         <button class="btn-login" onclick="doLogin()">로그인</button>
+
         <p class="hint" style="margin-top:14px">계정이 없으면 People팀에 문의하세요</p>
+
       </div></div>
+
     </div>
 
-    <div id="sc-users" class="screen">
+
+
+    <!-- 구성원: 복지 신청 -->
+
+    <div id="sc-apply" class="screen">
+
+      <div class="bbar" id="bb-apply"></div>
+
       <div class="card">
-        <div class="card-title">구성원 등록</div>
-        <div id="umsg" style="color:green;font-size:12px;margin-bottom:10px"></div>
-        <div class="g2" style="margin-bottom:10px">
-          <div class="fr"><label class="fl">이름</label><input class="fi" id="un" placeholder="홍길동"></div>
-          <div class="fr"><label class="fl">이메일</label><input class="fi" id="ue" type="email" placeholder="example@dentlink.app"></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+
+          <span class="card-title" style="margin-bottom:0">복지 혜택 신청</span>
+
+          <span class="hint">항목 추가로 한 번에 신청 가능해요</span>
+
         </div>
-        <div class="g2" style="margin-bottom:10px">
-          <div class="fr"><label class="fl">부서</label><input class="fi" id="ud" placeholder="개발팀"></div>
-          <div class="fr"><label class="fl">임시 비밀번호</label><input class="fi" id="upw" placeholder="비밀번호 입력"></div>
+
+        <div id="amsg"></div>
+
+        <div class="fr" style="max-width:200px;margin-bottom:14px">
+
+          <label class="fl">카테고리</label>
+
+          <select class="fs" id="acat" onchange="updT()">
+
+            <option value="">선택</option><option value="건강">건강</option><option value="성장">성장</option><option value="효율">효율</option>
+
+          </select>
+
         </div>
-        <p class="hint" style="margin-bottom:10px">등록 후 이메일과 비밀번호를 구성원에게 전달해주세요.</p>
-        <button class="btn-p" onclick="addUserFromUI()"><i class="ti ti-plus"></i> 등록</button>
+
+        <div id="iwrap"></div>
+
+        <button class="add-btn" onclick="addItem()"><i class="ti ti-plus"></i> 항목 추가</button>
+
+        <div class="tbar" id="tbar" style="display:none"></div>
+
+        <div id="swrap" style="display:none"></div>
+
+        <div class="fr"><label class="fl">비고 (선택)</label><textarea class="fta" id="anote" placeholder="기타 참고사항"></textarea></div>
+
+        <div style="text-align:right"><button class="btn-p" onclick="submitReq()"><i class="ti ti-send"></i> 신청하기</button></div>
+
       </div>
-      <div class="card" style="padding:20px">
-        <div class="card-title">구성원 목록</div>
-        <div id="ulist"></div>
-      </div>
+
     </div>
 
-    <div id="sc-apply" class="screen"><div class="card"><div class="card-title">복지 신청 페이지 준비됨</div></div></div>
-    <div id="sc-mine" class="screen"><div class="card"><div class="card-title">내 현황 페이지 준비됨</div></div></div>
-    <div id="sc-saas" class="screen"><div class="card"><div class="card-title">SaaS 신청 페이지 준비됨</div></div></div>
-    <div id="sc-myinfo" class="screen"><div class="card"><div class="card-title">내 정보 변경 준비됨</div></div></div>
+
+
+    <!-- 구성원: 내 현황 -->
+
+    <div id="sc-mine" class="screen">
+
+      <div class="bbar" id="bb-mine"></div>
+
+      <div class="card" style="padding:0">
+
+        <div class="card-title" style="padding:16px 20px 0">신청 내역</div>
+
+        <table class="tbl">
+
+          <thead><tr><th style="width:28px"></th><th>신청 제목</th><th>카테고리</th><th>항목 수</th><th>신청일</th><th style="text-align:right">합계</th><th>상태</th></tr></thead>
+
+          <tbody id="minetb"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- 구성원: SaaS 신청 -->
+
+    <div id="sc-saas" class="screen">
+
+      <div class="card">
+
+        <div class="card-title">SaaS 도입 신청</div>
+
+        <div id="smsg"></div>
+
+        <div class="g2" style="margin-bottom:10px">
+
+          <div class="fr"><label class="fl">SaaS명</label><input class="fi" id="sn" placeholder="예) Notion, Linear"></div>
+
+          <div class="fr"><label class="fl">플랜명 <span class="hint">(선택)</span></label><input class="fi" id="sp" placeholder="예) Pro, Team"></div>
+
+        </div>
+
+        <div class="g2" style="margin-bottom:10px">
+
+          <div class="fr">
+
+            <label class="fl">사용 구분</label>
+
+            <select class="fs" id="stype" onchange="updSaasType()">
+
+              <option value="personal">개인 사용</option>
+
+              <option value="team">팀 사용</option>
+
+            </select>
+
+          </div>
+
+          <div class="fr" id="steam-wrap" style="display:none">
+
+            <label class="fl">사용 팀 <span class="hint">(팀 전체에 구독 현황 표시)</span></label>
+
+            <select class="fs" id="steam"><option value="">팀 선택</option></select>
+
+          </div>
+
+        </div>
+
+        <div class="g3" style="margin-bottom:10px">
+
+          <div class="fr"><label class="fl">통화</label>
+
+            <select class="fs" id="scur" onchange="updMSaasLabel()">
+
+              <option value="KRW">KRW (원)</option>
+
+              <option value="USD">USD ($)</option>
+
+            </select>
+
+          </div>
+
+          <div class="fr"><label class="fl">월 비용</label><input class="fi" id="sc" type="number" placeholder="0"></div>
+
+          <div class="fr"><label class="fl">사이트 URL</label><input class="fi" id="su" placeholder="https://..."></div>
+
+        </div>
+
+        <div class="fr" style="margin-bottom:14px"><label class="fl">도입 목적</label><textarea class="fta" id="sr" placeholder="어떤 목적으로 사용할지 적어주세요"></textarea></div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between">
+
+          <span class="hint"><i class="ti ti-info-circle"></i> 월 구독 기준으로만 신청 가능합니다</span>
+
+          <button class="btn-p" onclick="submitSaas()"><i class="ti ti-send"></i> 신청하기</button>
+
+        </div>
+
+      </div>
+
+      <div class="card" style="padding:0">
+
+        <div class="card-title" style="padding:14px 16px 8px">내 신청 현황</div>
+
+        <div id="my-saas" style="padding:0 16px 12px"></div>
+
+      </div>
+
+      <div class="card" style="padding:0">
+
+        <div class="card-title" style="padding:14px 16px 8px">전체 구독 현황</div>
+
+        <table class="tbl"><thead><tr><th>서비스</th><th>플랜</th><th>담당자</th><th style="text-align:right">월 비용</th><th>상태</th></tr></thead>
+
+        <tbody id="saas-mtb"></tbody></table>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- 구성원: 내 정보 -->
+
+    <div id="sc-myinfo" class="screen">
+
+      <div class="card" style="max-width:480px">
+
+        <div class="card-title">내 정보 변경</div>
+
+        <div id="myinfo-msg"></div>
+
+        <div class="fr">
+
+          <label class="fl">이름</label>
+
+          <input class="fi" id="mi-name" placeholder="이름" readonly style="background:var(--bg2);color:var(--tx2)">
+
+        </div>
+
+        <div class="fr">
+
+          <label class="fl">이메일</label>
+
+          <input class="fi" id="mi-email" placeholder="이메일" readonly style="background:var(--bg2);color:var(--tx2)">
+
+        </div>
+
+        <div class="fr">
+
+          <label class="fl">부서</label>
+
+          <input class="fi" id="mi-dept" placeholder="부서">
+
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--bd);margin:14px 0">
+
+        <div class="card-title" style="margin-bottom:10px">비밀번호 변경</div>
+
+        <div class="fr">
+
+          <label class="fl">현재 비밀번호</label>
+
+          <input class="fi" id="mi-cur" type="password" placeholder="현재 비밀번호">
+
+        </div>
+
+        <div class="fr">
+
+          <label class="fl">새 비밀번호</label>
+
+          <input class="fi" id="mi-new" type="password" placeholder="새 비밀번호">
+
+        </div>
+
+        <div class="fr">
+
+          <label class="fl">새 비밀번호 확인</label>
+
+          <input class="fi" id="mi-con" type="password" placeholder="새 비밀번호 확인">
+
+        </div>
+
+        <button class="btn-p" onclick="saveMyInfo()">저장</button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- 관리자 -->
+
+    <div id="sc-adm" class="screen">
+
+
+
+      <!-- 대시보드 -->
+
+      <div id="at-dash" style="display:none">
+
+        <div class="metrics" id="dash-met"></div>
+
+        <div class="g2" style="margin-bottom:14px">
+
+          <div class="card" style="margin-bottom:0">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+
+              <span style="font-weight:600">복지 신청 대기</span>
+
+              <a onclick="aTab('reqs')" style="font-size:12px;color:var(--p);cursor:pointer">전체 보기 →</a>
+
+            </div>
+
+            <div id="dash-pend"></div>
+
+          </div>
+
+          <div class="card" style="margin-bottom:0">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+
+              <span style="font-weight:600">구성원별 잔여 예산</span>
+
+              <a onclick="aTab('budgets')" style="font-size:12px;color:var(--p);cursor:pointer">전체 보기 →</a>
+
+            </div>
+
+            <div id="dash-bud"></div>
+
+          </div>
+
+        </div>
+
+        <div class="card" style="margin-bottom:0">
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+
+            <span style="font-weight:600">SaaS 도입 신청 대기</span>
+
+            <a onclick="aTab('saas-adm')" style="font-size:12px;color:var(--p);cursor:pointer">전체 보기 →</a>
+
+          </div>
+
+          <div id="dash-saas-pend"></div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- 신청 현황 -->
+
+      <div id="at-reqs" style="display:none">
+
+        <div id="period-tabs-reqs" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"></div>
+
+        <div class="frow">
+
+          <select id="fst" onchange="renderReqs()"><option value="">전체 상태</option><option value="대기">대기</option><option value="승인">승인</option><option value="반려">반려</option></select>
+
+          <select id="fcat" onchange="renderReqs()"><option value="">전체 카테고리</option><option value="건강">건강</option><option value="성장">성장</option><option value="효율">효율</option></select>
+
+          <select id="fteam" onchange="renderReqs()"><option value="">전체 팀</option></select>
+
+          <select id="finact" onchange="renderReqs()"><option value="">전체 구성원</option><option value="active">재직 중</option><option value="inactive">퇴사자</option></select>
+
+          <input id="fq" placeholder="이름 검색" oninput="renderReqs()">
+
+          <button class="btn-p" style="height:32px" onclick="renderReqs()"><i class="ti ti-search"></i> Search</button>
+
+          <button class="btn" style="height:32px" onclick="resetF()"><i class="ti ti-refresh"></i> Reset</button>
+
+        </div>
+
+        <div class="frow" style="margin-bottom:14px;align-items:center">
+
+          <span style="font-size:12px;color:var(--tx2);white-space:nowrap">날짜 범위</span>
+
+          <input id="fds" type="date" placeholder="시작일" onchange="renderReqs()" style="height:32px;font-size:13px;padding:0 10px;border:1px solid var(--bd2);border-radius:var(--r);background:var(--bg);color:var(--tx)">
+
+          <span style="font-size:12px;color:var(--tx3)">~</span>
+
+          <input id="fde" type="date" placeholder="종료일" onchange="renderReqs()" style="height:32px;font-size:13px;padding:0 10px;border:1px solid var(--bd2);border-radius:var(--r);background:var(--bg);color:var(--tx)">
+
+          <button class="btn" style="height:32px;font-size:12px" onclick="setDateRange('quarter')">이번 분기</button>
+
+          <button class="btn" style="height:32px;font-size:12px" onclick="setDateRange('half')">이번 반기</button>
+
+          <button class="btn" style="height:32px;font-size:12px" onclick="setDateRange('year')">올해</button>
+
+        </div>
+
+        <div class="card" style="padding:0">
+
+          <table class="tbl"><thead><tr><th style="width:28px"></th><th>신청 제목</th><th>신청자</th><th>카테고리</th><th>항목</th><th>신청일</th><th style="text-align:right">합계</th><th>현황</th><th>처리</th></tr></thead>
+
+          <tbody id="reqs-tb"></tbody></table>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- 예산 현황 -->
+
+      <div id="at-budgets" style="display:none">
+
+        <div id="period-tabs-bud" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"></div>
+
+        <div class="frow" style="margin-bottom:12px">
+
+          <select id="bteam" onchange="renderBudgets()"><option value="">전체 팀</option></select>
+
+          <select id="binact" onchange="renderBudgets()"><option value="">전체 구성원</option><option value="active">재직 중</option><option value="inactive">퇴사자</option></select>
+
+        </div>
+
+        <div class="card" style="padding:0">
+
+          <table class="tbl"><thead><tr><th style="width:28px"></th><th>이름</th><th>부서</th><th>사용액</th><th style="width:180px">사용률</th><th style="text-align:right">분기 잔여</th><th style="text-align:right">반기 잔여</th></tr></thead>
+
+          <tbody id="bud-tb"></tbody></table>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- SaaS 관리 -->
+
+      <div id="at-saas-adm" style="display:none">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+
+          <div></div>
+
+          <button class="btn-p" onclick="openSF()"><i class="ti ti-plus"></i> 구독 추가</button>
+
+        </div>
+
+        <div id="sf-wrap" style="display:none" class="card">
+
+          <div class="card-title" id="sf-ttl">SaaS 구독 추가</div>
+
+          <div class="g2" style="margin-bottom:10px">
+
+            <div class="fr"><label class="fl">서비스명</label><input class="fi" id="sf-nm"></div>
+
+            <div class="fr"><label class="fl">카테고리</label><select class="fs" id="sf-ct"><option value="협업">협업</option><option value="디자인">디자인</option><option value="개발">개발</option><option value="마케팅">마케팅</option><option value="기타">기타</option></select></div>
+
+          </div>
+
+          <div class="g3" style="margin-bottom:10px">
+
+            <div class="fr"><label class="fl">통화</label><select class="fs" id="sf-cur" onchange="updSFcost()"><option value="KRW">KRW (원)</option><option value="USD">USD ($)</option></select></div>
+
+            <div class="fr"><label class="fl">월 비용</label><input class="fi" id="sf-cs" type="number" placeholder="0" oninput="updSFcost()"></div>
+
+            <div class="fr"><label class="fl" id="sf-cs-label">원화 금액</label><input class="fi" id="sf-cs-krw" type="number" placeholder="자동계산" readonly style="background:var(--bg2)"></div>
+
+          </div>
+
+          <div class="g2" style="margin-bottom:10px">
+
+            <div class="fr"><label class="fl">구독 시작일</label><input class="fi" id="sf-st" type="date" onchange="calcNextRenew()"></div>
+
+            <div class="fr"><label class="fl">구독 주기</label>
+
+              <select class="fs" id="sf-cycle" onchange="calcNextRenew()">
+
+                <option value="monthly">월 단위</option>
+
+                <option value="yearly">연 단위</option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+          <div class="fr" style="margin-bottom:10px">
+
+            <label class="fl">다음 갱신일 <span class="hint">(자동 계산)</span></label>
+
+            <input class="fi" id="sf-rn" readonly style="background:var(--bg2);color:var(--tx2)" placeholder="시작일 선택 시 자동 계산">
+
+          </div>
+
+          <div class="g2" style="margin-bottom:10px">
+
+            <div class="fr"><label class="fl">담당자</label><input class="fi" id="sf-ow"></div>
+
+            <div class="fr"><label class="fl">플랜/좌석</label><input class="fi" id="sf-pl"></div>
+
+          </div>
+
+          <div class="g2" style="margin-bottom:10px">
+
+            <div class="fr">
+
+              <label class="fl">사용 구분</label>
+
+              <select class="fs" id="sf-type" onchange="updSFtype()">
+
+                <option value="personal">개인 사용</option>
+
+                <option value="team">팀 사용</option>
+
+              </select>
+
+            </div>
+
+            <div class="fr" id="sf-team-wrap" style="display:none">
+
+              <label class="fl">사용 팀</label>
+
+              <select class="fs" id="sf-team"><option value="">팀 선택</option></select>
+
+            </div>
+
+          </div>
+
+          <div class="fr"><label class="fl">비고</label><input class="fi" id="sf-nt"></div>
+
+          <input type="hidden" id="sf-id">
+
+          <div style="display:flex;gap:8px;margin-top:4px">
+
+            <button class="btn-p" onclick="saveSaasAdm()">저장</button>
+
+            <button class="btn" onclick="closeSF()">취소</button>
+
+          </div>
+
+        </div>
+
+        <div class="card" style="padding:0;margin-bottom:14px">
+
+          <div class="card-title" style="padding:14px 16px 8px">도입 신청 목록</div>
+
+          <div id="saas-reqs" style="padding:0 16px 12px"></div>
+
+        </div>
+
+        <div class="card" style="padding:0">
+
+          <table class="tbl"><thead><tr><th>서비스</th><th>카테고리</th><th>구분</th><th>플랜</th><th>담당자</th><th>시작일</th><th>주기</th><th>다음 갱신일</th><th style="text-align:right">월 비용</th><th>상태</th><th></th></tr></thead>
+
+          <tbody id="saas-atb"></tbody></table>
+
+          <div style="padding:10px 16px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;font-size:13px">
+
+            <span style="color:var(--tx2)">월 합계</span><span style="font-weight:700" id="saas-tot">0원</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- 구성원 관리 -->
+
+      <div id="at-users" style="display:none">
+
+        <div class="card">
+
+          <div class="card-title">구성원 등록</div>
+
+          <div id="umsg"></div>
+
+          <div class="g2" style="margin-bottom:10px">
+
+            <div class="fr"><label class="fl">이름</label><input class="fi" id="un"></div>
+
+            <div class="fr"><label class="fl">이메일</label><input class="fi" id="ue" type="email"></div>
+
+          </div>
+
+          <div class="g2" style="margin-bottom:10px">
+
+            <div class="fr"><label class="fl">부서</label><input class="fi" id="ud" placeholder="개발팀"></div>
+
+            <div class="fr"><label class="fl">입사일</label><input class="fi" id="ujoin" type="date"></div>
+
+          </div>
+
+          <div class="g2" style="margin-bottom:10px">
+
+            <div class="fr"><label class="fl">임시 비밀번호</label><input class="fi" id="upw"></div>
+
+          </div>
+
+          <p class="hint" style="margin-bottom:10px">등록 후 이메일과 비밀번호를 직접 전달해주세요</p>
+
+          <button class="btn-p" onclick="addUser()"><i class="ti ti-plus"></i> 등록</button>
+
+        </div>
+
+        <div class="card" style="padding:0 20px">
+
+          <div class="card-title" style="padding-top:16px">구성원 목록</div>
+
+          <div id="ulist"></div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- 설정 -->
+
+      <div id="at-cfg" style="display:none">
+
+        <div class="g2">
+
+          <div class="card">
+
+            <div class="card-title">분기 설정</div>
+
+            <p class="hint" style="margin-bottom:12px">분기를 미리 등록해두면 신청일 기준으로 자동 분류됩니다</p>
+
+            <div class="g3" style="margin-bottom:10px">
+
+              <div class="fr"><label class="fl">분기명</label><input class="fi" id="cfg-q" placeholder="예) 2026 Q1"></div>
+
+              <div class="fr"><label class="fl">시작일</label><input class="fi" id="cfg-qs" type="date"></div>
+
+              <div class="fr"><label class="fl">종료일</label><input class="fi" id="cfg-qe" type="date"></div>
+
+            </div>
+
+            <button class="btn-p" onclick="addPeriod()"><i class="ti ti-plus"></i> 분기 추가</button>
+
+            <div id="pmsg" style="margin-top:8px;font-size:12px;color:#3B6D11"></div>
+
+            <div id="periods-list" style="margin-top:14px"></div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="card-title">반기 설정</div>
+
+            <div class="fr"><label class="fl">반기명</label><input class="fi" id="cfg-h" placeholder="예) 2026년 1반기"></div>
+
+            <div class="g2">
+
+              <div class="fr"><label class="fl">반기 시작일</label><input class="fi" id="cfg-hs" type="date"></div>
+
+              <div class="fr"><label class="fl">반기 종료일</label><input class="fi" id="cfg-he" type="date"></div>
+
+            </div>
+
+            <button class="btn-p" onclick="saveHalf()">저장</button>
+
+            <div id="hmsg" style="margin-top:8px;font-size:12px;color:#3B6D11"></div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="card-title">팀 관리</div>
+
+            <p class="hint" style="margin-bottom:12px">팀을 등록하면 구성원 배정 및 SaaS 팀 구독 관리에 사용됩니다</p>
+
+            <div style="display:flex;gap:8px;margin-bottom:12px">
+
+              <input class="fi" id="cfg-team-nm" placeholder="팀명 (예) PD, Biz, HR" style="flex:1">
+
+              <button class="btn-p" onclick="addTeam()"><i class="ti ti-plus"></i> 추가</button>
+
+            </div>
+
+            <div id="team-cfg-list"></div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="card-title">비밀번호 변경</div>
+
+            <div class="fr"><input class="fi" id="cfg-pw" type="password" placeholder="새 비밀번호"></div>
+
+            <button class="btn-p" onclick="changePw()">변경</button>
+
+            <div id="pwmsg" style="margin-top:8px;font-size:12px;color:#3B6D11"></div>
+
+            <hr style="border:none;border-top:1px solid var(--bd);margin:14px 0">
+
+            <p class="hint" style="margin-bottom:10px">신청 데이터 초기화 (구성원 유지)</p>
+
+            <button class="btn" style="color:#A32D2D;border-color:#F7C1C1" onclick="clearReqs()">신청 초기화</button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+    </div>
 
   </div>
+
 </div>
+
 </div>
 
-<script>
-// --- [데이터 관리 및 초기화 엔진] ---
-const DEFAULT_ADMIN = { id: 'u1', name: 'People팀', email: 'people@dentlink.app', dept: 'People팀', pw: 'admin1234', role: 'admin' };
 
-function loadSystemData() {
-  try {
-    const localData = localStorage.getItem('inno_welfare_data');
-    if (localData) {
-      const parsed = JSON.parse(localData);
-      if (parsed && parsed.users && parsed.users.length > 0) {
-        return parsed;
-      }
-    }
-  } catch(e) {}
+
+<!-- 퇴사 처리 모달 -->
+
+<div class="modal-bg" id="leave-modal" onclick="closeLeaveModal()">
+
+  <div class="modal-box" onclick="event.stopPropagation()" style="width:380px">
+
+    <div style="font-size:15px;font-weight:600;margin-bottom:6px">퇴사 처리</div>
+
+    <p class="hint" style="margin-bottom:16px">퇴사 처리 시 로그인이 불가능하고 신청도 제한됩니다.<br>기존 신청 이력은 유지됩니다.</p>
+
+    <input type="hidden" id="lv-id">
+
+    <div class="fr">
+
+      <label class="fl">퇴사일 <span style="color:#A32D2D">*</span></label>
+
+      <input class="fi" id="lv-date" type="date">
+
+    </div>
+
+    <div class="fr" style="margin-bottom:16px">
+
+      <label class="fl">사유 <span class="hint">(선택)</span></label>
+
+      <input class="fi" id="lv-reason" placeholder="예) 자발적 퇴사, 계약 만료">
+
+    </div>
+
+    <div id="lv-msg" style="margin-bottom:10px"></div>
+
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+
+      <button class="btn" onclick="closeLeaveModal()">취소</button>
+
+      <button class="btn-p" style="background:#A32D2D;border-color:#A32D2D" onclick="saveLeave()">퇴사 처리</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- 구성원 수정 모달 -->
+
+<div class="modal-bg" id="user-edit-modal" onclick="closeUserEdit()">
+
+  <div class="modal-box" onclick="event.stopPropagation()" style="width:420px">
+
+    <div style="font-size:15px;font-weight:600;margin-bottom:16px">구성원 정보 수정</div>
+
+    <input type="hidden" id="ue-id">
+
+    <div class="g2" style="margin-bottom:10px">
+
+      <div class="fr"><label class="fl">이름</label><input class="fi" id="ue-name"></div>
+
   
-  // 초기 데이터가 아예 없는 경우 기본값 세팅
-  return {
-    users: [DEFAULT_ADMIN],
-    requests: [],
-    saas: [],
-    saasReqs: [],
-    period: { half: '2026년 1반기', quarter: '2026년 2분기', qdate: '' }
-  };
-}
 
-// 최초 데이터 로드
-let d = loadSystemData();
-
-function S(data) {
-  d = data;
-  localStorage.setItem('inno_welfare_data', JSON.stringify(d));
-}
-
-// --- [화면 전환 시스템 (go)] ---
-function go(screenId) {
-  const screens = document.querySelectorAll('.screen');
-  screens.forEach(s => s.classList.remove('on'));
-  
-  const targetScreen = document.getElementById('sc-' + screenId);
-  if(targetScreen) targetScreen.classList.add('on');
-  
-  const navButtons = document.querySelectorAll('.ni');
-  navButtons.forEach(b => b.classList.remove('active'));
-  const activeBtn = document.getElementById('sn-' + screenId);
-  if(activeBtn) activeBtn.classList.add('active');
-  
-  const pgTitle = document.getElementById('pgTitle');
-  if(screenId === 'users') pgTitle.innerText = '구성원 관리';
-  if(screenId === 'apply') pgTitle.innerText = '복지 신청';
-  if(screenId === 'mine') pgTitle.innerText = '내 현황';
-  if(screenId === 'saas') pgTitle.innerText = 'SaaS 신청';
-  if(screenId === 'myinfo') pgTitle.innerText = '내 정보';
-}
-
-// 어드민 전용 탭 전환 호환 함수
-function aTab(tabId) {
-  if(tabId === 'users') go('users');
-}
-
-// --- [로그인 엔진] ---
-function doLogin() {
-  const email = document.getElementById('le').value.trim();
-  const password = document.getElementById('lp').value;
-  const lmsg = document.getElementById('lmsg');
-  
-  const user = d.users.find(u => u.email === email && u.pw === password);
-  
-  if (user) {
-    lmsg.innerText = '';
-    document.getElementById('topUser').innerText = `${user.name} (${user.dept})`;
-    go('users'); // 로그인 성공 시 구성원 관리로 바로 이동
-  } else {
-    lmsg.innerText = '이메일 또는 비밀번호가 올바르지 않습니다.';
-  }
-}
-
-function doOut() {
-  document.getElementById('le').value = '';
-  document.getElementById('lp').value = '';
-  document.getElementById('topUser').innerText = '';
-  go('login');
-}
-
-// --- [구성원 자동 동적 추가 엔진] ---
-function addUserFromUI() {
-  const nameInput = document.getElementById('un').value.trim();
-  const emailInput = document.getElementById('ue').value.trim();
-  const deptInput = document.getElementById('ud').value.trim() || '구성원';
-  const pwInput = document.getElementById('upw').value;
-  const umsg = document.getElementById('umsg');
-
-  if (!nameInput || !emailInput || !pwInput) {
-    alert('이름, 이메일, 임시 비밀번호는 필수 입력사항입니다!');
-    return;
-  }
-
-  // 이메일 중복 체크
-  if (d.users.some(u => u.email === emailInput)) {
-    alert('이미 등록된 이메일 주소입니다.');
-    return;
-  }
-
-  // 동적 ID 생성 (u2, u3, u4...)
-  const nextId = 'u' + (d.users.length + 1);
-
-  const newUser = {
-    id: nextId,
-    name: nameInput,
-    email: emailInput,
-    dept: deptInput,
-    pw: pwInput,
-    role: 'user' // 가입하는 직원은 일반 구성원 등급 부여
-  };
-
-  // 기존 명단 뒤에 자동으로 붙이기
-  d.users.push(newUser);
-  S(d); // 데이터 브라우저에 즉시 세이브
-
-  umsg.innerText = `🎉 명단 등록 완료: ${nameInput}님이 추가되었습니다.`;
-  
-  // 입력창 지워주기
-  document.getElementById('un').value = '';
-  document.getElementById('ue').value = '';
-  document.getElementById('ud').value = '';
-  document.getElementById('upw').value = '';
-
-  setTimeout(() => { umsg.innerText = ''; }, 3000);
-  renderUserList();
-}
-
-// --- [구성원 목록 화면 갱신 엔진] ---
-function renderUserList() {
-  const ulist = document.getElementById('ulist');
-  if (!ulist) return;
-  
-  if (d.users.length <= 1) {
-    ulist.innerHTML = '<div class="empty">등록된 구성원이 없습니다.</div>';
-    return;
-  }
-
-  let html = '';
-  d.users.forEach(u => {
-    if(u.id === 'u1') return; // 기본 관리자 계정은 목록에서 숨김 처리
-    html += `
-      <div class="user-row">
-        <div class="user-info-box">
-          <div class="avatar">${u.name.substring(0,2)}</div>
-          <div>
-            <div style="font-weight:600">${u.name} <span class="hint" style="margin-left:4px">${u.dept}</span></div>
-            <div class="hint">${u.email}</div>
-          </div>
-        </div>
-        <div>
-          <span class="badge bp">비밀번호: ${u.pw}</span>
-        </div>
-      </div>
-    `;
-  });
-  ulist.innerHTML = html;
-}
-
-// 웹 앱 첫 실행 시 기본 리스트업 작동
-window.onload = function() {
-  renderUserList();
-};
-</script>
-</body>
-</html>
